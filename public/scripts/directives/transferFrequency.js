@@ -23,8 +23,9 @@ angular.module('footballVisApp')
 					height = 400 - margin.top - margin.bottom;
 
 				var svg = d3.select("transferChart").append("svg")
-					.attr("width", width + margin.left + margin.right)
-					.attr("height", height + margin.top + margin.bottom)
+					.attr("id", "transferChart")
+					.style("width", width + margin.left + margin.right)
+					.style("height", height + margin.top + margin.bottom)
 					.append("g")
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -70,6 +71,13 @@ angular.module('footballVisApp')
 				}, true);
 
 				function init(transferdata) {
+					height = scope.clubs.length*20 +80
+
+					d3.select("#transferChart")
+					.style("height", height)
+
+
+
 					var data = []
 					var clubCounts = {};
 					var minDate = new Date(scope.filter.datepicker.startDate), //getDate(data[0]),
@@ -232,7 +240,7 @@ angular.module('footballVisApp')
 						.domain(data.map(function(d) {
 							return d[transferVar].name
 						}))
-						.rangePoints([0, height - 10]);
+						.rangePoints([0, height - 80]);
 
 					var xAxis = d3.svg.axis()
 						.scale(x)
@@ -299,7 +307,7 @@ angular.module('footballVisApp')
 
 					svg.append("g")
 						.attr("class", "x axis")
-						.attr("transform", "translate(0," + height + ")")
+						.attr("transform", "translate(0," + (height - 70) + ")")
 						.call(xAxis);
 
 
@@ -326,14 +334,10 @@ angular.module('footballVisApp')
 								.attr("cx", (i * 200))
 								.attr("cy", -30)
 								.attr("r", 5)
-							// .attr("width", 10)
-							// .attr("height", 10)
 							.attr("class", function(d) {
 								var str = d.split(' ')
 								return scope.filter.view + '-' + str[0].toLowerCase()
 							})
-							// .style("fill", color_hash[String(i)][1]);
-
 							g.append("text")
 								.attr("x", (i * 200) + 20)
 								.attr("y", -25)
@@ -343,7 +347,6 @@ angular.module('footballVisApp')
 									var str = d.split(' ')
 									return scope.filter.view + '-' + str[0].toLowerCase()
 								})
-							// .style("fill", color_hash[String(i)][1])
 							.text(d);
 
 						});
