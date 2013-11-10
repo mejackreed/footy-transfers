@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+  {% parent %}
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="components/bootstrap-datepicker/css/datepicker.css">
+{% endblock %}
+
+{% block content %}
+<div ng-controller="TransferCtrl">
+{% include 'transfers.html' %}
+</div>
+    
+{% endblock %}
+
+{% block scripts %}
+<script src="components/d3/d3.min.js"></script>
+<script src="scripts/tooltip.js"></script>
+<script src="components/momentjs/min/moment.min.js"></script>
+<script src="components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="components/angular-strap/dist/angular-strap.min.js"></script>
+<script src="scripts/app.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/directives/forceGraph.js"></script>
+<script src="scripts/directives/transferFrequency.js"></script>
+<script src="scripts/directives/seasonResults.js"></script>
+
+{% endblock %}

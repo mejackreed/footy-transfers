@@ -1,0 +1,14 @@
+{
+  "name": "package",
+  "version": "0.0.0",
+  "dependencies": {
+    "lodash": "~2.0.0",
+    "bootstrap": "~3.0.0",
+    "jquery": "~2.0.3",
+    "angular": "~1.2.0",
+    "bootstrap-datepicker": "~1.2.0",
+    "angular-strap": "~0.7.7",
+    "d3": "~3.3.9",
+    "momentjs": "~2.4.0"
+  }
+}

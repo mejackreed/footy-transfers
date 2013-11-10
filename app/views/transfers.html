@@ -1,0 +1,82 @@
+<div class="row">
+	<h2 class="text-center"> [[filter.league]] Transfers</h2>
+</div>
+<div class="row well">
+	<div class=" col-md-2">
+		<label>Select league:</label>
+		<select class="form-control" ng-model="filter.league" ng-change="loadData()">
+			<option value="English Premier">English Premier</option>
+			<option value="Spanish Primera Liga">Spanish Primera Liga</option>
+			<option value="German Bundesliga 1">German Bundesliga 1</option>
+			<option value="Italian Serie A">Italian Serie A</option>
+
+		</select>
+	</div>
+	<div class=" col-md-2">
+		<label>Select transfer type:</label>
+		<select class="form-control" ng-model="filter.type" ng-change="loadData()">
+			<option value="to">Moving to</option>
+			<option value="from">Moving from</option>
+		</select>
+	</div>
+	<div class="input-group col-md-2">
+  		<input class="form-control" type="text" ng-model="filter.datepicker.startDate" data-date-format="mm/dd/yyyy" bs-datepicker>
+  		<div class="input-group-btn" data-toggle="datepicker">
+  			<button type="button" class="btn btn-default" >
+  				<span class=""><i class="glyphicon glyphicon-calendar"></i></span>
+  			</button>
+  		</div>
+	</div>
+	<div class="input-group col-md-2">
+  		<input class="form-control" type="text" ng-model="filter.datepicker.endDate" data-date-format="mm/dd/yyyy" bs-datepicker>
+  		<div class="input-group-btn" data-toggle="datepicker">
+  			<button type="button" class="btn btn-default" >
+  				<span class=""><i class="glyphicon glyphicon-calendar"></i></span>
+  			</button>
+  		</div>
+	</div>
+	<div class=" col-md-2">
+		<label>View by:</label>
+		<select class="form-control" ng-model="filter.view" ng-change="loadData()">
+			<option value="position">Position</option>
+			<option value="fee">Fee</option>
+			<option value="age">Age</option>
+		</select>
+	</div>
+</div>
+<!-- <div class="row well">
+	<select class="form-control" ng-model="filter.view">
+			<option value="clubs">Clubs</option>
+			<option value="fee">Transfer fee</option>
+	</select>
+</div>	 -->
+<hr>
+<div class="row">
+	<div class="col-md-2 well" style="height:400px; overflow: scroll;">
+		Select <a ng-click="selectAllClubs()">All</a> | <a ng-click="unselectAllClubs()">None</a>
+		<ul class='list-unstyled'>
+			<li class='' ng-repeat='club in clubs'>
+				<label>
+					<input type='checkbox' ng-model='club.view'> 
+					<!-- <img ng-src="[[club.crest_url]]" width=20 height=20> -->
+					[[club.name]]
+				</label>
+			</li>
+		</ul>
+	</div>
+	<div class='col-md-10' transfer-frequency clubs='clubs' transferdata='transferdata' filter='filter' dataLoaded='dataLoaded'></div>
+</div>
+<div class="row">
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+<!-- <div class="col-md-6" season-results clubs='clubs' season='season' filter='filter' dataLoaded='dataLoaded'></div> -->
+</div>
