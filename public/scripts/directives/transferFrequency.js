@@ -143,12 +143,35 @@ angular.module('footballVisApp')
 					var legendItems = {
 						"fee": ['Free', 'Signed', 'Loan', "Disclosed Fee"],
 						"position": ['Forward', 'Midfielder', 'Defender', 'Goalkeeper'],
-						"age": ['Under 20', '20 to 30', '30 to 40', 'Over 40']
+						"age": ['Under 20', '20 to 30', '30 to 40', 'Over 40'],
+						"nation": ["Italy", "England", "France", "Germany", "Spain", "Other"]
 					}
 
 						function setClass(d) {
 							if (scope.filter.view === 'clubs') {
 								return d[transferVar].name.toLowerCase().replace(/\s/g, "-")
+							}
+							if (scope.filter.view === 'nation') {
+								switch (d.player.nation.toLowerCase()) {
+									case 'england':
+										return 'nation-england'
+										break;
+									case 'france':
+										return 'nation-france'
+										break;
+									case 'germany':
+										return 'nation-germany'
+										break;
+									case 'italy':
+										return 'nation-italy'
+										break;
+									case 'spain':
+										return 'nation-spain'
+										break;
+									default:
+										return 'nation-other'
+										break;
+								}
 							}
 							if (scope.filter.view === 'age') {
 								var age = moment(d.transferDate).diff(d.player.dateOfBirth, 'years')
@@ -331,7 +354,7 @@ angular.module('footballVisApp')
 						.each(function(d, i) {
 							var g = d3.select(this);
 							g.append("circle")
-								.attr("cx", (i * 200))
+								.attr("cx", (i * (width/legendItems[scope.filter.view].length)))
 								.attr("cy", -30)
 								.attr("r", 5)
 							.attr("class", function(d) {
@@ -339,7 +362,7 @@ angular.module('footballVisApp')
 								return scope.filter.view + '-' + str[0].toLowerCase()
 							})
 							g.append("text")
-								.attr("x", (i * 200) + 20)
+								.attr("x", (i * (width/legendItems[scope.filter.view].length)) + 20)
 								.attr("y", -25)
 								.attr("height", 30)
 								.attr("width", 100)

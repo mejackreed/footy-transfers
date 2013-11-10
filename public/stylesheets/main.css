@@ -20,6 +20,31 @@ body {
     line-height: 1;
     letter-spacing: -1px;
 }
+
+.nation-england{
+  fill: #ff3738;
+}
+
+.nation-germany{
+  fill: #fe781e;
+}
+
+.nation-italy{
+  fill: #41bb19;
+}
+
+.nation-france{
+  fill: #1570a6;
+}
+
+.nation-spain{
+  fill: #9b59bb;
+}
+
+.nation-other{
+  fill: ##1ba1e2;
+}
+
 .age-under{
   fill: #41bb19;
 }

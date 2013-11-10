@@ -19,21 +19,27 @@
 			<option value="from">Moving from</option>
 		</select>
 	</div>
-	<div class="input-group col-md-2">
-  		<input class="form-control" type="text" ng-model="filter.datepicker.startDate" data-date-format="mm/dd/yyyy" bs-datepicker>
-  		<div class="input-group-btn" data-toggle="datepicker">
-  			<button type="button" class="btn btn-default" >
-  				<span class=""><i class="glyphicon glyphicon-calendar"></i></span>
-  			</button>
-  		</div>
+	<div class="col-md-2">
+		<label>Start date:</label>
+		<div class="input-group">
+	  		<input class="form-control" type="text" ng-model="filter.datepicker.startDate" data-date-format="mm/dd/yyyy" bs-datepicker>
+	  		<div class="input-group-btn" data-toggle="datepicker">
+	  			<button type="button" class="btn btn-default" >
+	  				<span class=""><i class="glyphicon glyphicon-calendar"></i></span>
+	  			</button>
+	  		</div>
+	  	</div>
 	</div>
-	<div class="input-group col-md-2">
-  		<input class="form-control" type="text" ng-model="filter.datepicker.endDate" data-date-format="mm/dd/yyyy" bs-datepicker>
-  		<div class="input-group-btn" data-toggle="datepicker">
-  			<button type="button" class="btn btn-default" >
-  				<span class=""><i class="glyphicon glyphicon-calendar"></i></span>
-  			</button>
-  		</div>
+	<div class="col-md-2">
+		<label>End date:</label>
+		<div class="input-group">
+	  		<input class="form-control" type="text" ng-model="filter.datepicker.endDate" data-date-format="mm/dd/yyyy" bs-datepicker>
+	  		<div class="input-group-btn" data-toggle="datepicker">
+	  			<button type="button" class="btn btn-default" >
+	  				<span class=""><i class="glyphicon glyphicon-calendar"></i></span>
+	  			</button>
+	  		</div>
+	  	</div>
 	</div>
 	<div class=" col-md-2">
 		<label>View by:</label>
@@ -41,6 +47,7 @@
 			<option value="position">Position</option>
 			<option value="fee">Fee</option>
 			<option value="age">Age</option>
+			<option value="nation">Nationality</option>
 		</select>
 	</div>
 </div>
