@@ -10,6 +10,7 @@ angular.module('footballVisApp')
 				transferdata: '=',
 				filter: '=',
 				dataloaded: '=',
+				chartdata: '='
 			},
 			link: function postLink(scope, element, attrs) {
 
@@ -71,6 +72,7 @@ angular.module('footballVisApp')
 				}, true);
 
 				function init(transferdata) {
+
 					height = scope.clubs.length*20 +80
 
 					d3.select("#transferChart")
@@ -147,6 +149,12 @@ angular.module('footballVisApp')
 						"nation": ["Italy", "England", "France", "Germany", "Spain", "Other"]
 					}
 
+					scope.chartdata = {};
+
+					_.each(legendItems[scope.filter.view], function(val){
+						scope.chartdata[val] = 0;
+					});
+
 						function setClass(d) {
 							if (scope.filter.view === 'clubs') {
 								return d[transferVar].name.toLowerCase().replace(/\s/g, "-")
@@ -154,21 +162,27 @@ angular.module('footballVisApp')
 							if (scope.filter.view === 'nation') {
 								switch (d.player.nation.toLowerCase()) {
 									case 'england':
+										scope.chartdata["England"] += 1;
 										return 'nation-england'
 										break;
 									case 'france':
+										scope.chartdata["France"] += 1;
 										return 'nation-france'
 										break;
 									case 'germany':
+										scope.chartdata["Germany"] += 1;
 										return 'nation-germany'
 										break;
 									case 'italy':
+										scope.chartdata["Italy"] += 1;
 										return 'nation-italy'
 										break;
 									case 'spain':
+										scope.chartdata["Spain"] += 1;
 										return 'nation-spain'
 										break;
 									default:
+										scope.chartdata["Other"] += 1;
 										return 'nation-other'
 										break;
 								}
@@ -177,15 +191,19 @@ angular.module('footballVisApp')
 								var age = moment(d.transferDate).diff(d.player.dateOfBirth, 'years')
 								switch (true) {
 									case (age <20) :
+										scope.chartdata['Under 20'] += 1;
 										return 'age-under';
 										break;
 									case (age >=20 && age <30) :
+										scope.chartdata['20 to 30'] += 1;
 										return 'age-20';
 										break;
 									case (age >=30 && age <40):
+										scope.chartdata['30 to 40'] += 1;
 										return 'age-30'
 										break;
 									case (age >=40):
+										scope.chartdata['Over 40'] += 1;
 										return 'age-over'
 										break;
 									default:
@@ -196,15 +214,19 @@ angular.module('footballVisApp')
 							if (scope.filter.view === 'position') {
 								switch (d.player.position.toLowerCase()) {
 									case 'goalkeeper':
+										scope.chartdata['Goalkeeper'] += 1;
 										return 'position-goalkeeper'
 										break;
 									case 'forward':
+										scope.chartdata['Forward'] += 1;
 										return 'position-forward'
 										break;
 									case 'defender':
+										scope.chartdata['Defender'] += 1;
 										return 'position-defender'
 										break;
 									case 'midfielder':
+										scope.chartdata['Midfielder'] += 1;
 										return 'position-midfielder'
 										break;
 									default:
@@ -215,15 +237,19 @@ angular.module('footballVisApp')
 							if (scope.filter.view === 'fee') {
 								switch (d['fee'].toLowerCase()) {
 									case 'free':
+										scope.chartdata['Free'] += 1;
 										return 'fee-free';
 										break;
 									case 'signed':
+										scope.chartdata['Signed'] += 1;
 										return 'fee-signed';
 										break;
 									case 'loan':
+										scope.chartdata['Loan'] += 1;
 										return 'fee-loan';
 										break;
 									default:
+										scope.chartdata['Disclosed Fee'] += 1;
 										return 'fee-disclosed';
 										break;
 								}
@@ -245,7 +271,7 @@ angular.module('footballVisApp')
 							var fee = d['fee']
 						}
 
-						return '<br><strong>' + d['player'].name + '</strong> - ' + d.player.position + '<br> ' + d.transferFromClub.name + ' &#8594; ' + d.transferToClub.name + '<br> Fee: ' + fee
+						return '<br><strong>' + d['player'].name + '</strong> - ' + d.player.position + ' - ' + d.player.nation + '<br> ' + d.transferFromClub.name + ' &#8594; ' + d.transferToClub.name + '<br> Fee: ' + fee
 					}
 
 					function getDate(d) {
@@ -278,30 +304,25 @@ angular.module('footballVisApp')
 						.orient("left")
 						.tickSize(2)
 						.tickFormat(function(d, i) {
-							return d + " " + clubCounts[d]
+							return d + " | " + clubCounts[d]
 						})
 
 					svg.selectAll("circle")
 						.data(data)
 						.enter().append("circle")
 						.attr("cx", function(d) {
-							// return x(getDate(d['values']))
-							return x(getDate(d)) //+ margin.left + margin.right;
+							return x(getDate(d));
 						})
 						.attr("cy", function(d) {
-							// return y(d['values']['values']);
-							// console.log(d[transferVar].name)
 							return y(d[transferVar].name);
 						})
 						.attr("class", function(d) {
 							return setClass(d);
 						})
 						.style("fill-opacity", 0.7)
-					// .style("pointer-events", "none")
 					.attr("r", function(d) {
 						var size = 5
 						return size;
-						// return 5;	
 					})
 						.call(d3.helper.tooltip()
 							.style({
@@ -343,6 +364,12 @@ angular.module('footballVisApp')
 						.attr("dy", ".71em")
 						.style("text-anchor", "end")
 
+					svg.append("text")
+						.attr("x", -100)
+						.attr("y", -20)
+						.text("Club | Transfers")
+
+
 					var legend = svg.append("g")
 						.attr("class", "legend")
 						.attr("x", width - 200)
@@ -354,7 +381,7 @@ angular.module('footballVisApp')
 						.each(function(d, i) {
 							var g = d3.select(this);
 							g.append("circle")
-								.attr("cx", (i * (width/legendItems[scope.filter.view].length)))
+								.attr("cx", (i * (width/legendItems[scope.filter.view].length)) + 40)
 								.attr("cy", -30)
 								.attr("r", 5)
 							.attr("class", function(d) {
@@ -362,7 +389,7 @@ angular.module('footballVisApp')
 								return scope.filter.view + '-' + str[0].toLowerCase()
 							})
 							g.append("text")
-								.attr("x", (i * (width/legendItems[scope.filter.view].length)) + 20)
+								.attr("x", (i * (width/legendItems[scope.filter.view].length)) + 50)
 								.attr("y", -25)
 								.attr("height", 30)
 								.attr("width", 100)
@@ -373,8 +400,9 @@ angular.module('footballVisApp')
 							.text(d);
 
 						});
-				}
 
+
+				}
 
 
 			}

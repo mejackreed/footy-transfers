@@ -5,6 +5,8 @@ angular.module('footballVisApp')
 
 		$scope.clubs = [];
 
+		$scope.chartData = {};
+
 		$scope.dataLoaded = {
 			"clubs": false,
 			"transfers": false,
