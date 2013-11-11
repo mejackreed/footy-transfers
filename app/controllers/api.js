@@ -101,6 +101,9 @@ ApiController.prototype.transfers = function(type) {
 					Transfer.find({
 						'transferFromClub': {
 							$in: clubids
+						},
+						'transferDate': {
+							"$gte": new Date(2000, 01 , 01)
 						}
 					}).populate('player transferToClub transferFromClub').exec(function(err, doc) {
 						res.json(doc);
