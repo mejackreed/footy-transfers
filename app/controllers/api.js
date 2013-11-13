@@ -48,10 +48,11 @@ ApiController.prototype.leagues = function(req, res) {
 		}).exec(function(err, doc) {
 			res.json(doc)
 		})
+	} else {
+		Club.find().distinct('league').exec(function(err, doc) {
+			res.json(doc)
+		})
 	}
-	Club.find().distinct('league').exec(function(err, doc) {
-		res.json(doc)
-	})
 }
 
 // ApiController.prototype.transfers = function(req, res) {
@@ -83,7 +84,7 @@ ApiController.prototype.transfers = function(type) {
 							$in: clubids
 						},
 						'transferDate': {
-							"$gte": new Date(2000, 01 , 01)
+							"$gte": new Date(2000, 01, 01)
 						}
 					}).populate('player transferToClub transferFromClub').exec(function(err, doc) {
 						res.json(doc);
@@ -103,7 +104,7 @@ ApiController.prototype.transfers = function(type) {
 							$in: clubids
 						},
 						'transferDate': {
-							"$gte": new Date(2000, 01 , 01)
+							"$gte": new Date(2000, 01, 01)
 						}
 					}).populate('player transferToClub transferFromClub').exec(function(err, doc) {
 						res.json(doc);
