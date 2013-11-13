@@ -37,7 +37,7 @@ angular.module('footballVisApp')
 		$scope.loadData = function() {
 			$scope.dataLoaded.clubs = false;
 			$scope.dataLoaded.transfers = false;
-			d3.json("/api/leagues/" + $scope.filter.league , function(data) {
+			d3.json("/api/leagues/" + $scope.filter.league, function(data) {
 				// console.log(data)
 				// data.forEach(function(val, i) {
 				// 	val.view = true;
