@@ -4,8 +4,10 @@ var _ = require('../node_modules/lodash'),
   async = require('../node_modules/async');
 
 
-var clubs = require('./teamInfo');
+// var clubs = require('./teamInfo');
 
+var clubs = _.union(require('./teamInfo1'), require('./teamInfo2'));
+console.log(clubs);
 // console.log(db)
 // Club.collection.remove(function(err) {
 //   console.log(err)
@@ -24,7 +26,8 @@ async.series({
         var test = new Club({
           name: val.name,
           league: val.league,
-          oldId: val.teamID
+          oldId: val.teamID,
+          crestUrl: val.logo
         }).save(function(err) {
           callback(null, 2);
         })

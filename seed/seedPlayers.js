@@ -6,7 +6,7 @@ var _ = require('../node_modules/lodash');
 var moment = require('../node_modules/moment');
 var async = require('../node_modules/async');
 
-var players = _.union(require('./playerInfo2'), require('./playerInfo3'), require('./playerInfo4'), require('./playerInfo5'), require('./playerInfo6'), require('./playerInfo7'));
+var players = _.union(require('./playerInfo1'), require('./playerInfo2'), require('./playerInfo3'), require('./playerInfo4'), require('./playerInfo5'), require('./playerInfo6'), require('./playerInfo7'));
 
 // console.log(db)
 
