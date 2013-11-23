@@ -132,7 +132,12 @@ angular.module('footballVisApp')
 						data = data.concat(thisdata)
 						if (scope.searchvalue) {
 							data = _.filter(data, function(val) {
-								var str = JSON.stringify(val)
+								var str = ""
+								str += val.player.name
+								str += val.player.nation
+								str += val.transferToClub.name
+								str += val.transferFromClub.name
+								str += val.fee
 								return (str.indexOf(scope.searchvalue) !== -1)
 							})
 						}
