@@ -278,8 +278,6 @@ angular.module('footballVisApp')
 						return new Date(d['transferDate']);
 					}
 
-					// console.log(data)
-
 					var formatDate = d3.time.format("%x");
 
 					var x = d3.time.scale()
@@ -320,10 +318,20 @@ angular.module('footballVisApp')
 							return setClass(d);
 						})
 						.style("fill-opacity", 0.7)
-					.attr("r", function(d) {
-						var size = 5
-						return size;
-					})
+						.attr("r", function(d) {
+							var size = 5;
+							return size;
+						})
+						.on("mouseover", function(d) {
+							var hoverElement = d3.select(this);
+							 	hoverElement.transition().duration(200)
+	              	.attr("r", 8); 
+            })
+		        .on("mouseout", function(d) {       
+		        	var hoverElement = d3.select(this);
+							 	hoverElement.transition().duration(200)
+	              	.attr("r", 5); 
+		        })
 						.call(d3.helper.tooltip()
 							.style({
 								padding: '3px',
@@ -398,13 +406,8 @@ angular.module('footballVisApp')
 									return scope.filter.view + '-' + str[0].toLowerCase()
 								})
 							.text(d);
-
 						});
-
-
 				}
-
-
 			}
 		};
 	});

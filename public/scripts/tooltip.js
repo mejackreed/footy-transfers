@@ -19,7 +19,7 @@ d3.helper.tooltip = function() {
             tooltipDiv.style(styles);
             var absoluteMousePos = d3.mouse(bodyNode);
             tooltipDiv.style({
-                left: (absoluteMousePos[0] + 10) + 'px',
+                left: (absoluteMousePos[0] + 20) + 'px',
                 top: (absoluteMousePos[1] - 15) + 'px',
                 position: 'absolute',
                 'z-index': 1001
@@ -36,7 +36,7 @@ d3.helper.tooltip = function() {
                 // Move tooltip
                 var absoluteMousePos = d3.mouse(bodyNode);
                 tooltipDiv.style({
-                    left: (absoluteMousePos[0] + 10) + 'px',
+                    left: (absoluteMousePos[0] + 20) + 'px',
                     top: (absoluteMousePos[1] - 15) + 'px'
                 });
                 // Keep updating the text, it could change according to position
