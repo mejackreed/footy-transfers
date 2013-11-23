@@ -10,10 +10,10 @@ angular.module('footballVisApp')
 				transferdata: '=',
 				filter: '=',
 				dataloaded: '=',
-				chartdata: '='
+				chartdata: '=',
+				currenttransfer: '='
 			},
 			link: function postLink(scope, element, attrs) {
-
 				var margin = {
 					top: 40,
 					right: 20,
@@ -85,13 +85,15 @@ angular.module('footballVisApp')
 					var minDate = new Date(scope.filter.datepicker.startDate), //getDate(data[0]),
 						maxDate = new Date(scope.filter.datepicker.endDate) //getDate(data[data.length - 1]);
 
-						var transferVar = ''
+						var transferVar = '', transferVarOpp = '';
 					switch (scope.filter.type) {
 						case 'to':
 							transferVar = 'transferToClub';
+							transferVarOpp = 'transferFromClub';
 							break;
 						case 'from':
 							transferVar = 'transferFromClub';
+							transferVarOpp = 'transferToClub';
 							break;
 					}
 
@@ -331,12 +333,12 @@ angular.module('footballVisApp')
 							d3.select(this)
 								.transition().duration(200)
 								.attr("r", 8);
-							d3.selectAll("circle").filter(function(e){
-								if (e.player){
+							d3.selectAll("circle").filter(function(e) {
+								if (e.player) {
 									return e.player._id === d.player._id
 								}
 							}).transition().duration(200).attr("r", 10)
-							
+
 						})
 						.on("mouseout", function(d) {
 							d3.select("g").selectAll("text")
@@ -347,11 +349,18 @@ angular.module('footballVisApp')
 							// d3.select(this);
 							// 	.transition().duration(200)
 							// 	.attr("r", 5);
-							d3.selectAll("circle").filter(function(e){
-								if (e.player){
+							d3.selectAll("circle").filter(function(e) {
+								if (e.player) {
 									return e.player._id === d.player._id
 								}
 							}).transition().duration(200).attr("r", 5)
+						})
+						.on("click", function(d) {
+							scope.$apply(function(){
+								scope.currenttransfer = d;
+								// console.log(scope.currenttransfer)
+							});
+							$('#rumor-modal').modal('show')
 						})
 						.call(d3.helper.tooltip()
 							.style({
@@ -392,6 +401,27 @@ angular.module('footballVisApp')
 						.attr("y", 6)
 						.attr("dy", ".71em")
 						.style("text-anchor", "end")
+						.style("cursor", "pointer")
+						
+					d3.select("g").selectAll("text")
+						.filter(function(d) {
+							return typeof(d) === "string"
+						})
+						.on("mouseover", function(d){
+							d3.selectAll("circle").filter(function(e) {
+								if (e.transferToClub) {
+									return e[transferVarOpp].name === d
+								}
+							}).transition().duration(200).attr("r", 10)
+						})
+						.on("mouseout", function(d){
+							d3.selectAll("circle").filter(function(e) {
+								if (e.transferToClub) {
+									return e[transferVarOpp].name === d
+								}
+							}).transition().duration(200).attr("r", 5)
+						})
+						
 
 					svg.append("text")
 						.attr("x", -100)

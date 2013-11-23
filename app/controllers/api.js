@@ -1,7 +1,8 @@
 var Club = require('../models/club'),
 	Player = require('../models/player'),
-	Transfer = require('../models/transfer')
-	var db = require('../models/db');
+	Transfer = require('../models/transfer'),
+	Rumor = require('../models/rumor');
+var db = require('../models/db');
 
 var _ = require('lodash');
 
@@ -19,6 +20,7 @@ exports.setup = function(app) {
 	app.get('/api/transfers/to/:league', api.transfers('to'));
 	app.get('/api/transfers/from/:league', api.transfers('from'));
 	app.get('/api/transfers', api.transfers);
+	app.get('/api/rumors/:player', api.rumors);
 
 };
 
@@ -128,6 +130,13 @@ ApiController.prototype.players = function(req, res) {
 	})
 }
 
+ApiController.prototype.rumors = function(req, res) {
+	Rumor.find({
+		playerName: req.params.player
+	}).exec(function(err,doc){
+		res.json(doc)
+	})
+}
 
 // var stuff = new Item({
 // 	name: "hello stuff",

@@ -7,6 +7,10 @@ angular.module('footballVisApp')
 
 		$scope.chartData = {};
 
+		$scope.currentTransfer = {};
+
+		$scope.rumors = [];
+
 		$scope.dataLoaded = {
 			"clubs": false,
 			"transfers": false,
