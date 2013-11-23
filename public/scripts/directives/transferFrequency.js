@@ -11,7 +11,8 @@ angular.module('footballVisApp')
 				filter: '=',
 				dataloaded: '=',
 				chartdata: '=',
-				currenttransfer: '='
+				currenttransfer: '=',
+				searchvalue: '='
 			},
 			link: function postLink(scope, element, attrs) {
 				var margin = {
@@ -58,6 +59,19 @@ angular.module('footballVisApp')
 					}
 				}, true);
 
+				scope.$watch('searchvalue', function(newVal, oldVal) {
+					d3.entries(scope.dataloaded).forEach(function(val, i) {
+						if (!val.value) {
+							return;
+						}
+					})
+					svg.selectAll('*').remove();
+					if (scope.transferdata) {
+						init(scope.transferdata);
+					}
+
+				}, true);
+
 				scope.$watch('clubs', function(newVal, oldVal) {
 					d3.entries(scope.dataloaded).forEach(function(val, i) {
 						if (!val.value) {
@@ -85,7 +99,8 @@ angular.module('footballVisApp')
 					var minDate = new Date(scope.filter.datepicker.startDate), //getDate(data[0]),
 						maxDate = new Date(scope.filter.datepicker.endDate) //getDate(data[data.length - 1]);
 
-						var transferVar = '', transferVarOpp = '';
+						var transferVar = '',
+						transferVarOpp = '';
 					switch (scope.filter.type) {
 						case 'to':
 							transferVar = 'transferToClub';
@@ -115,6 +130,12 @@ angular.module('footballVisApp')
 							})
 						}
 						data = data.concat(thisdata)
+						if (scope.searchvalue) {
+							data = _.filter(data, function(val) {
+								var str = JSON.stringify(val)
+								return (str.indexOf(scope.searchvalue) !== -1)
+							})
+						}
 						if (!data[data.length - 1]) {
 							data.splice(data.length - 1, 1)
 						}
@@ -356,7 +377,7 @@ angular.module('footballVisApp')
 							}).transition().duration(200).attr("r", 5)
 						})
 						.on("click", function(d) {
-							scope.$apply(function(){
+							scope.$apply(function() {
 								scope.currenttransfer = d;
 								// console.log(scope.currenttransfer)
 							});
@@ -402,26 +423,26 @@ angular.module('footballVisApp')
 						.attr("dy", ".71em")
 						.style("text-anchor", "end")
 						.style("cursor", "pointer")
-						
+
 					d3.select("g").selectAll("text")
 						.filter(function(d) {
 							return typeof(d) === "string"
 						})
-						.on("mouseover", function(d){
+						.on("mouseover", function(d) {
 							d3.selectAll("circle").filter(function(e) {
 								if (e.transferToClub) {
 									return e[transferVarOpp].name === d
 								}
 							}).transition().duration(200).attr("r", 10)
 						})
-						.on("mouseout", function(d){
+						.on("mouseout", function(d) {
 							d3.selectAll("circle").filter(function(e) {
 								if (e.transferToClub) {
 									return e[transferVarOpp].name === d
 								}
 							}).transition().duration(200).attr("r", 5)
 						})
-						
+
 
 					svg.append("text")
 						.attr("x", -100)
