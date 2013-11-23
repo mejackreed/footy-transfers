@@ -135,6 +135,7 @@ angular.module('footballVisApp')
 								var str = ""
 								str += val.player.name
 								str += val.player.nation
+								str += val.player.position
 								str += val.transferToClub.name
 								str += val.transferFromClub.name
 								str += val.fee
