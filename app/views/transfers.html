@@ -64,7 +64,7 @@
 			<li class='' ng-repeat='club in clubs'>
 				<label>
 					<input type='checkbox' ng-model='club.view'> 
-					<!-- <img ng-src="[[club.crest_url]]" width=20 height=20> -->
+					<img ng-show="club.crestUrl.length>0" ng-src="[[club.crestUrl]]" width=20 height=20>
 					[[club.name]]
 				</label>
 			</li>
