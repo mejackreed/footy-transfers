@@ -179,6 +179,7 @@ angular.module('footballVisApp')
 					}
 
 					scope.chartdata = {};
+				
 
 					_.each(legendItems[scope.filter.view], function(val) {
 						scope.chartdata[val] = 0;
@@ -394,7 +395,7 @@ angular.module('footballVisApp')
 								padding: '3px',
 								font: '12px',
 								background: '#fff',
-								opacity: '.9',
+								opacity: '.75',
 								border: '0px'
 							})
 							.text(function(d, i) {
@@ -454,8 +455,7 @@ angular.module('footballVisApp')
 						.attr("x", -100)
 						.attr("y", -20)
 						.text("Club | Transfers")
-
-
+					
 					var legend = svg.append("g")
 						.attr("class", "legend")
 						.attr("x", width - 200)
@@ -469,13 +469,28 @@ angular.module('footballVisApp')
 							g.append("circle")
 								.attr("cx", (i * (width / legendItems[scope.filter.view].length)) + 40)
 								.attr("cy", -30)
-								.attr("r", 5)
+								.attr("r", function(d){
+									return (scope.chartdata[d]/data.length) * (15-3) + 3
+								})
 								.attr("class", function(d) {
 									var str = d.split(' ')
 									return scope.filter.view + '-' + str[0].toLowerCase()
 								})
+								.call(d3.helper.tooltip()
+									.style({
+										padding: '3px',
+										font: '12px',
+										background: '#fff',
+										opacity: '.9',
+										border: '0px'
+									})
+									.text(function(d, i) {
+										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100* scope.chartdata[d]/data.length) + "%)</small>"
+										return text
+									})
+								)
 							g.append("text")
-								.attr("x", (i * (width / legendItems[scope.filter.view].length)) + 50)
+								.attr("x", (i * (width / legendItems[scope.filter.view].length)) + 60)
 								.attr("y", -25)
 								.attr("height", 30)
 								.attr("width", 100)
@@ -483,8 +498,22 @@ angular.module('footballVisApp')
 									var str = d.split(' ')
 									return scope.filter.view + '-' + str[0].toLowerCase()
 								})
-								.text(d);
+								.text(d)
+								.call(d3.helper.tooltip()
+									.style({
+										padding: '3px',
+										font: '12px',
+										background: '#fff',
+										opacity: '.9',
+										border: '0px'
+									})
+									.text(function(d, i) {
+										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100* scope.chartdata[d]/data.length) + "%)</small>"
+										return text
+									})
+								)
 						});
+
 				}
 			}
 		};
