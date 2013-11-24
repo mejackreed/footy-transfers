@@ -12,9 +12,11 @@ angular.module('footballVisApp')
 				dataloaded: '=',
 				chartdata: '=',
 				currenttransfer: '=',
-				searchvalue: '='
+				results: '='
 			},
 			link: function postLink(scope, element, attrs) {
+
+				//setup sizes
 				var margin = {
 					top: 40,
 					right: 20,
@@ -24,6 +26,7 @@ angular.module('footballVisApp')
 					width = 960 - margin.left - margin.right,
 					height = 400 - margin.top - margin.bottom;
 
+				//create initial svg element
 				var svg = d3.select("transferChart").append("svg")
 					.attr("id", "transferChart")
 					.style("width", width + margin.left + margin.right)
@@ -31,10 +34,12 @@ angular.module('footballVisApp')
 					.append("g")
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+				//setup tooltip
 				var div = d3.select("body").append("div")
 					.attr("class", "tooltip")
 					.style("opacity", 0);
 
+				//watch for data being loaded and filters changing
 				scope.$watch('dataloaded', function(newVal, oldVal) {
 					d3.entries(scope.dataloaded).forEach(function(val, i) {
 						if (!val.value) {
@@ -59,19 +64,6 @@ angular.module('footballVisApp')
 					}
 				}, true);
 
-				scope.$watch('searchvalue', function(newVal, oldVal) {
-					d3.entries(scope.dataloaded).forEach(function(val, i) {
-						if (!val.value) {
-							return;
-						}
-					})
-					svg.selectAll('*').remove();
-					if (scope.transferdata) {
-						init(scope.transferdata);
-					}
-
-				}, true);
-
 				scope.$watch('clubs', function(newVal, oldVal) {
 					d3.entries(scope.dataloaded).forEach(function(val, i) {
 						if (!val.value) {
@@ -85,6 +77,7 @@ angular.module('footballVisApp')
 
 				}, true);
 
+				//drawing the graph (data has already been checked that it has loaded)
 				function init(transferdata) {
 
 					height = scope.clubs.length * 20 + 80
@@ -112,13 +105,12 @@ angular.module('footballVisApp')
 							break;
 					}
 
+					//filtering the transfer data by selected clubs, by date range
 					scope.clubs.forEach(function(val, i) {
 						var thisdata = [];
 						if (val.view) {
 							transferdata.forEach(function(recval, i) {
-								// console.log(recval)
 								var thisDate = new Date(recval.transferDate)
-								// console.log(recval[transferVar])
 								if (recval[transferVar].name == val.name && thisDate > minDate && thisDate < maxDate) {
 									thisdata.push(recval)
 									if (val.name in clubCounts) {
@@ -130,7 +122,8 @@ angular.module('footballVisApp')
 							})
 						}
 						data = data.concat(thisdata)
-						if (scope.searchvalue) {
+						//filter data by search terms
+						if (scope.filter.searchValue) {
 							data = _.filter(data, function(val) {
 								var str = ""
 								str += val.player.name
@@ -139,15 +132,15 @@ angular.module('footballVisApp')
 								str += val.transferToClub.name
 								str += val.transferFromClub.name
 								str += val.fee
-								return (str.indexOf(scope.searchvalue) !== -1)
+								return (str.indexOf(scope.filter.searchValue) !== -1)
 							})
 						}
 						if (!data[data.length - 1]) {
 							data.splice(data.length - 1, 1)
 						}
 					})
-					// console.log(data)
 
+					//sorting the transfer data by club number of transfers
 					data.sort(function(a, b) {
 						if (clubCounts[a[transferVar].name] < clubCounts[b[transferVar].name])
 							return 1;
@@ -157,7 +150,8 @@ angular.module('footballVisApp')
 						return 0;
 					})
 
-					var testing = d3.nest()
+					//nesting transfers for transfer display on days with multiple transfers
+					var nestedTransfers = d3.nest()
 						.key(function(d) {
 							return d[transferVar].name
 						})
@@ -165,12 +159,12 @@ angular.module('footballVisApp')
 							return d['transferDate']
 						})
 						.entries(data, d3.map)
-					// console.log(testing)
 
 					if (data.length < 1) {
 						return;
 					}
 
+					//building legend items and categories
 					var legendItems = {
 						"fee": ['Free', 'Signed', 'Loan', "Disclosed Fee"],
 						"position": ['Forward', 'Midfielder', 'Defender', 'Goalkeeper'],
@@ -185,6 +179,7 @@ angular.module('footballVisApp')
 						scope.chartdata[val] = 0;
 					});
 
+					//returns correct legend class and counts legend items
 					function setClass(d) {
 						if (scope.filter.view === 'clubs') {
 							return d[transferVar].name.toLowerCase().replace(/\s/g, "-")
@@ -284,15 +279,7 @@ angular.module('footballVisApp')
 									break;
 							}
 						}
-
 					}
-
-					function formatCurrency(f) {
-						f = d3.format(f);
-						return function(d) {
-							return f(d).replace(/^([-+−])?/, "$1$$");
-						};
-					};
 
 					function formatTooltip(d) {
 						if (!isNaN(d['fee'])) {
@@ -300,7 +287,6 @@ angular.module('footballVisApp')
 						} else {
 							var fee = d['fee']
 						}
-
 						return '<br><strong>' + d['player'].name + '</strong> - ' + d.player.position + ' - ' + d.player.nation + '<br> ' + d.transferFromClub.name + ' &#8594; ' + d.transferToClub.name + '<br> Fee: ' + fee
 					}
 
@@ -319,6 +305,7 @@ angular.module('footballVisApp')
 						}))
 						.rangePoints([0, height - 80]);
 
+					//setting up axes
 					var xAxis = d3.svg.axis()
 						.scale(x)
 						.orient("bottom")
@@ -335,6 +322,7 @@ angular.module('footballVisApp')
 							return d + " | " + clubCounts[d]
 						})
 
+					//create transfer circles
 					svg.selectAll("circle")
 						.data(data)
 						.enter().append("circle")
@@ -400,7 +388,7 @@ angular.module('footballVisApp')
 							})
 							.text(function(d, i) {
 								var text = "<small>" + moment(d['transferDate']).format('MM/DD/YYYY');
-								testing.forEach(function(val, i) {
+								nestedTransfers.forEach(function(val, i) {
 									if (val['key'] == d[transferVar].name) {
 										val.values.forEach(function(val2, j) {
 											if (val2['key'] == d['transferDate']) {
@@ -415,6 +403,7 @@ angular.module('footballVisApp')
 							})
 					)
 
+					//displaying axes
 					svg.append("g")
 						.attr("class", "x axis")
 						.attr("transform", "translate(0," + (height - 70) + ")")
@@ -450,12 +439,12 @@ angular.module('footballVisApp')
 							}).transition().duration(200).attr("r", 5)
 						})
 
-
 					svg.append("text")
 						.attr("x", -100)
 						.attr("y", -20)
 						.text("Club | Transfers")
-					
+
+					//sets up legend
 					var legend = svg.append("g")
 						.attr("class", "legend")
 						.attr("x", width - 200)

@@ -9,12 +9,15 @@ angular.module('footballVisApp')
 
 		$scope.currentTransfer = {};
 
+		$scope.results = [];
+
 		$scope.rumors = [];
 
 		$scope.dataLoaded = {
 			"clubs": false,
 			"transfers": false,
-			"seasons": false
+			"seasons": false,
+			"results": false
 		};
 
 		$scope.filter = {
@@ -42,28 +45,22 @@ angular.module('footballVisApp')
 			$scope.dataLoaded.clubs = false;
 			$scope.dataLoaded.transfers = false;
 			d3.json("/api/leagues/" + $scope.filter.league, function(data) {
-				// console.log(data)
-				// data.forEach(function(val, i) {
-				// 	val.view = true;
-				// })
 				$scope.clubs = data;
 				$scope.dataLoaded.clubs = true;
 				$scope.selectAllClubs()
 				$scope.$apply();
 			})
-			// $scope.fulldata;
 			d3.json("/api/transfers/" + $scope.filter.type + "/" + $scope.filter.league, function(data) {
-				// console.log(data)
 				$scope.transferdata = data
 				$scope.dataLoaded.transfers = true;
 				$scope.$apply();
 			})
 
-			// d3.json("data/eplseason.json", function(data) {
-			// 	$scope.season = data;
-			// 	$scope.dataLoaded.seasons = true;
-			// 	$scope.$apply();
-			// })
+			d3.json("/api/results/" + $scope.filter.league, function(data){
+				$scope.results = data;
+				$scope.dataLoaded.results = true;
+				$scope.$apply();
+			})
 		}
 		$scope.loadData()
 	});

@@ -51,15 +51,9 @@
 	</div>
 	<div class="col-md-2">
 		<label>Search:</label>
-		<input class="form-control" ng-model="searchValue">
+		<input class="form-control" ng-model="filter.searchValue">
 	</div>
 </div>
-<!-- <div class="row well">
-	<select class="form-control" ng-model="filter.view">
-			<option value="clubs">Clubs</option>
-			<option value="fee">Transfer fee</option>
-	</select>
-</div>	 -->
 <hr>
 <div class="row">
 	<div class="col-md-2 well" style="height:400px; overflow: scroll;">
@@ -74,12 +68,11 @@
 			</li>
 		</ul>
 	</div>
-	<div class='col-md-10' id="transfer-frequency" transfer-frequency clubs='clubs' transferdata='transferdata' filter='filter' dataLoaded='dataLoaded' chartData='chartData' currentTransfer='currentTransfer' searchValue='searchValue'></div>
+	<div class='col-md-10' id="transfer-frequency" transfer-frequency clubs='clubs' transferdata='transferdata' filter='filter' dataLoaded='dataLoaded' chartData='chartData' currentTransfer='currentTransfer' results='results'></div>
 </div>
 <div class="row">
 	<div class="col-md-6">
 		[[chartData]]
 	</div>
-<!-- <div class="col-md-6" season-results clubs='clubs' season='season' filter='filter' dataLoaded='dataLoaded'></div> -->
 </div>
 {% include "partials/rumorModal.html" %}
