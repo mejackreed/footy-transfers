@@ -1,7 +1,8 @@
 var Club = require('../models/club'),
 	Player = require('../models/player'),
 	Transfer = require('../models/transfer'),
-	Rumor = require('../models/rumor');
+	Rumor = require('../models/rumor'),
+	Season = require('../models/season');
 var db = require('../models/db');
 
 var _ = require('lodash');
@@ -21,7 +22,8 @@ exports.setup = function(app) {
 	app.get('/api/transfers/from/:league', api.transfers('from'));
 	app.get('/api/transfers', api.transfers);
 	app.get('/api/rumors/:player', api.rumors);
-
+	app.get('/api/results/:league', api.results);
+	app.get('/api/results/:league/start/:start/end/:end', api.results);
 };
 
 function ApiController() {
@@ -133,18 +135,41 @@ ApiController.prototype.players = function(req, res) {
 ApiController.prototype.rumors = function(req, res) {
 	Rumor.find({
 		playerName: req.params.player
-	}).exec(function(err,doc){
+	}).exec(function(err, doc) {
 		res.json(doc)
 	})
 }
 
-// var stuff = new Item({
-// 	name: "hello stuff",
-// 	equipped: true
-// }).save(function(err,doc){
-// 	console.log(err,doc)
-// })
+ApiController.prototype.results = function(req, res) {
+	if (req.params.start && req.params.end) {
+		Season.find({
+			leagueName: req.params.league,
+			startYear: {
+				$gte: req.params.start
+			},
+			endYear: {
+				$lte: req.params.end
+			}
+		}).populate('clubResults').exec(function(err, doc) {
+			Club.populate(doc,{
+				path: 'clubResults.club'
+			}, function(err, docs){
+				console.log(docs)
+				res.json(docs)
+			})
+			// res.json(doc)
+		})
+	} else {
+		Season.find({
+			leagueName: req.params.league
+		}).populate('clubResults').exec(function(err, doc) {
+			Club.populate(doc,{
+				path: 'clubResults.club'
+			}, function(err, docs){
+				console.log(docs)
+				res.json(docs)
+			})
+		})
+	}
 
-
-// Item.find()
-// console.log(Item.find().exec())
+}

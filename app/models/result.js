@@ -2,7 +2,7 @@ var mongoose = require("mongoose"),
   Schema = mongoose.Schema;
 
 var ResultSchema = new Schema({
-  clubId: {
+  club: {
     type: Schema.Types.ObjectId,
     ref: 'Club',
     required: false

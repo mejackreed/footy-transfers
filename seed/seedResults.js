@@ -3,7 +3,8 @@ var Result = require('../app/models/result');
 var Season = require('../app/models/season');
 var Club = require('../app/models/club');
 var _ = require('../node_modules/lodash'),
-  async = require('../node_modules/async');
+  async = require('../node_modules/async'),
+  mongoose = require('../node_modules/mongoose');
 
 var results = require('./teamResult');
 
@@ -12,8 +13,9 @@ function getId(res, callback) {
     oldId: res.clubId
   }).select('clubId').exec(function(err, doc) {
     // console.log(doc[0])
-    callback({
-      clubId: doc[0],
+    // console.log(doc[0]._id)
+    var result = new Result({
+      club: mongoose.Types.ObjectId(String(doc[0]._id)),
       win: res.win,
       draw: res.draw,
       loss: res.lose,
@@ -21,7 +23,10 @@ function getId(res, callback) {
       points: res.points,
       goalsAgainst: res.goalsagainst,
       goalsFor: res.goalsfor
-    })
+    }).save(function(err, doc) {
+      callback(doc._id);
+    });
+
   });
 }
 
@@ -37,7 +42,8 @@ async.series({
         var seaRes = [];
         // console.log(val)
         _.each(val.teamResult, function(res, i) {
-          getId(res, function(current){
+          getId(res, function(current) {
+            // console.log(current)
             seaRes.push(current)
           });
         });
@@ -46,14 +52,23 @@ async.series({
           if (seaRes.length !== val.teamResult.length) {
             setTimeout(checkStuff, 500);
           } else {
+            var seaResObId = [];
+            if (seaRes.length > 0){
+              console.log('yes!')
+            _.each(seaRes, function(cid) {
+              // push client id (converted from string to mongo object id) into clients
+              console.log(cid)
+              seaResObId.push(mongoose.Types.ObjectId(String(cid)));
+            });
+          }
+
             var years = val.year.split(' ');
             var test = new Season({
               leagueName: val.leagueName,
               startYear: years[0],
               endYear: years[1],
-              clubResults: seaRes
-            }).save(function(err) {
-            });
+              clubResults: seaResObId
+            }).save(function(err) {});
           }
 
         }

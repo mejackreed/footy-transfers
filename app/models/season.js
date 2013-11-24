@@ -9,12 +9,15 @@ var SeasonSchema = new Schema({
     index: true
   },
   startYear: {
-    type: String
+    type: Number
   },
   endYear: {
-    type: String
+    type: Number
   },
-  clubResults : []
+  clubResults: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Result'
+  }]
 });
 
 module.exports = mongoose.model('Season', SeasonSchema);
