@@ -154,7 +154,6 @@ ApiController.prototype.results = function(req, res) {
 			Club.populate(doc,{
 				path: 'clubResults.club'
 			}, function(err, docs){
-				console.log(docs)
 				res.json(docs)
 			})
 			// res.json(doc)
@@ -166,7 +165,6 @@ ApiController.prototype.results = function(req, res) {
 			Club.populate(doc,{
 				path: 'clubResults.club'
 			}, function(err, docs){
-				console.log(docs)
 				res.json(docs)
 			})
 		})

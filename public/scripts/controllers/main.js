@@ -30,6 +30,10 @@ angular.module('footballVisApp')
 			league: 'English Premier'
 		};
 
+		$scope.getHelp = function(){
+			$('body').chardinJs('start')
+		}
+
 		$scope.selectAllClubs = function() {
 			$scope.clubs.forEach(function(val, i) {
 				val.view = true;
