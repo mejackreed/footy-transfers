@@ -1,9 +1,10 @@
+'use strict';
+
 var Club = require('../models/club'),
 	Player = require('../models/player'),
 	Transfer = require('../models/transfer'),
 	Rumor = require('../models/rumor'),
 	Season = require('../models/season');
-var db = require('../models/db');
 
 var _ = require('lodash');
 
@@ -36,12 +37,12 @@ ApiController.prototype.clubs = function(req, res) {
 		Club.find({
 			name: req.params.name
 		}).exec(function(err, doc) {
-			res.json(doc)
-		})
+			res.json(doc);
+		});
 	} else {
 		Club.find().exec(function(err, doc) {
-			res.json(doc)
-		})
+			res.json(doc);
+		});
 	}
 };
 
@@ -50,30 +51,17 @@ ApiController.prototype.leagues = function(req, res) {
 		Club.find({
 			league: req.params.league
 		}).exec(function(err, doc) {
-			res.json(doc)
-		})
+			res.json(doc);
+		});
 	} else {
 		Club.find().distinct('league').exec(function(err, doc) {
-			res.json(doc)
-		})
+			res.json(doc);
+		});
 	}
-}
-
-// ApiController.prototype.transfers = function(req, res) {
-// 	if (req.params.league) {
-// 		Club.find({
-// 			league: req.params.league
-// 		}).exec(function(err, doc) {
-// 			res.json(doc)
-// 		})
-// 	}
-// 	Transfer.find().populate('player').exec(function(err, doc) {
-// 		res.json(doc)
-// 	})
-// }
+};
 
 ApiController.prototype.transfers = function(type) {
-	return function(req, res, next) {
+	return function(req, res) {
 		switch (type) {
 			case 'to':
 				Club.find({
@@ -88,11 +76,12 @@ ApiController.prototype.transfers = function(type) {
 							$in: clubids
 						},
 						'transferDate': {
-							"$gte": new Date(2000, 01, 01)
+							"$gte": new Date(2000, 1, 1)
 						}
-					}).populate('player transferToClub transferFromClub').exec(function(err, doc) {
-						res.json(doc);
-					});
+					}).populate('player transferToClub transferFromClub')
+						.exec(function(err, doc) {
+							res.json(doc);
+						});
 				});
 				break;
 			case 'from':
@@ -108,37 +97,38 @@ ApiController.prototype.transfers = function(type) {
 							$in: clubids
 						},
 						'transferDate': {
-							"$gte": new Date(2000, 01, 01)
+							"$gte": new Date(2000, 1, 1)
 						}
-					}).populate('player transferToClub transferFromClub').exec(function(err, doc) {
-						res.json(doc);
-					});
+					}).populate('player transferToClub transferFromClub')
+						.exec(function(err, doc) {
+							res.json(doc);
+						});
 				});
 				break;
 		}
-	}
-}
+	};
+};
 
 ApiController.prototype.players = function(req, res) {
 	if (req.params.nation) {
 		Player.find({
 			nation: req.params.nation
 		}).exec(function(err, doc) {
-			res.json(doc)
-		})
+			res.json(doc);
+		});
 	}
 	Player.find().exec(function(err, doc) {
-		res.json(doc)
-	})
-}
+		res.json(doc);
+	});
+};
 
 ApiController.prototype.rumors = function(req, res) {
 	Rumor.find({
 		playerName: req.params.player
 	}).exec(function(err, doc) {
-		res.json(doc)
-	})
-}
+		res.json(doc);
+	});
+};
 
 ApiController.prototype.results = function(req, res) {
 	if (req.params.start && req.params.end) {
@@ -154,10 +144,9 @@ ApiController.prototype.results = function(req, res) {
 			Club.populate(doc,{
 				path: 'clubResults.club'
 			}, function(err, docs){
-				res.json(docs)
-			})
-			// res.json(doc)
-		})
+				res.json(docs);
+			});
+		});
 	} else {
 		Season.find({
 			leagueName: req.params.league
@@ -165,9 +154,8 @@ ApiController.prototype.results = function(req, res) {
 			Club.populate(doc,{
 				path: 'clubResults.club'
 			}, function(err, docs){
-				res.json(docs)
-			})
-		})
+				res.json(docs);
+			});
+		});
 	}
-
-}
+};

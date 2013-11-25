@@ -1,4 +1,4 @@
-
+'use strict';
 
 exports.setup = function(app) {
   var home = new HomeController();

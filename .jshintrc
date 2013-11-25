@@ -63,5 +63,10 @@
       "afterEach",
       "expect"
     ],
-    "maxlen": 80
+    "maxlen": 80,
+    "globals": {
+      "angular": false,
+      "d3": false
+    }
+
 }

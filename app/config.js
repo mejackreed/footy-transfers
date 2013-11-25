@@ -4,10 +4,17 @@ var express = require('express');
 var path = require('path');
 var url = require('url');
 var swig = require('swig');
+var db = require('./models/db');
+
 
 var config = exports; exports.constructor = function() {};
 
 config.load = function(app) {
+
+  db.connection.on('connected', function(){
+    console.log('Database successfully connected');
+  });
+
   var appRoot = path.resolve('.') + '/';
 
   swig.setDefaults({ cache: false });

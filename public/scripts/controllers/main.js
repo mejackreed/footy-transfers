@@ -31,19 +31,19 @@ angular.module('footballVisApp')
 		};
 
 		$scope.getHelp = function(){
-			$('body').chardinJs('start')
-		}
+			$('body').chardinJs('start');
+		};
 
 		$scope.selectAllClubs = function() {
-			$scope.clubs.forEach(function(val, i) {
+			$scope.clubs.forEach(function(val) {
 				val.view = true;
-			})
-		}
+			});
+		};
 		$scope.unselectAllClubs = function() {
-			$scope.clubs.forEach(function(val, i) {
+			$scope.clubs.forEach(function(val) {
 				val.view = false;
-			})
-		}
+			});
+		};
 
 		$scope.loadData = function() {
 			$scope.dataLoaded.clubs = false;
@@ -51,20 +51,23 @@ angular.module('footballVisApp')
 			d3.json("/api/leagues/" + $scope.filter.league, function(data) {
 				$scope.clubs = data;
 				$scope.dataLoaded.clubs = true;
-				$scope.selectAllClubs()
+				$scope.selectAllClubs();
 				$scope.$apply();
-			})
-			d3.json("/api/transfers/" + $scope.filter.type + "/" + $scope.filter.league, function(data) {
-				$scope.transferdata = data
-				$scope.dataLoaded.transfers = true;
-				$scope.$apply();
-			})
+			});
+			d3.json("/api/transfers/" +
+				$scope.filter.type +
+				"/" +
+				$scope.filter.league, function(data) {
+					$scope.transferdata = data;
+					$scope.dataLoaded.transfers = true;
+					$scope.$apply();
+			});
 
 			d3.json("/api/results/" + $scope.filter.league, function(data){
 				$scope.results = data;
 				$scope.dataLoaded.results = true;
 				$scope.$apply();
-			})
-		}
-		$scope.loadData()
+			});
+		};
+		$scope.loadData();
 	});
