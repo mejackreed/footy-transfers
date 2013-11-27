@@ -173,7 +173,7 @@ angular.module('footballVisApp')
 					}
 
 					scope.chartdata = {};
-				
+
 
 					_.each(legendItems[scope.filter.view], function(val) {
 						scope.chartdata[val] = 0;
@@ -278,6 +278,61 @@ angular.module('footballVisApp')
 									return 'fee-disclosed';
 									break;
 							}
+						}
+					}
+
+					function setViewValue(e, d) {
+						if (scope.filter.view === 'clubs') {
+							return e[transferVar].name.toLowerCase().replace(/\s/g, "-")
+						}
+						if (scope.filter.view === 'nation') {
+							var nation = e.player.nation.toLowerCase();
+							if (d === 'Other'){
+								if (!_.contains(legendItems[scope.filter.view], e.player.nation)){
+									return true;
+								}else{
+									return false;
+								}
+							}
+							else{
+								if (d.toLowerCase() === nation){
+									return true;
+								}
+							}
+						}
+						if (scope.filter.view === 'age') {
+							var age = moment(e.transferDate).diff(e.player.dateOfBirth, 'years')
+							if (d === 'Under 20' && age < 20){
+								return true;
+							}
+							if (d === '20 to 30' && age >= 20 && age < 30){
+								return true;
+							}
+							if (d === '30 to 40' && age >= 30 && age < 40){
+								return true;
+							}
+							if (d === 'Over 40' && age >= 40){
+								return true;
+							}
+						}
+						if (scope.filter.view === 'position') {
+							var thisOne = e.player.position.toLowerCase();
+							return d.toLowerCase() == thisOne ? true : false;
+						}
+						if (scope.filter.view === 'fee') {
+							var thisOne = e['fee'].toLowerCase()
+							if (d === 'Disclosed Fee') {
+								if (thisOne !== 'free' && thisOne !== 'signed' && thisOne !== 'loan') {
+									return true;
+								}
+							} else {
+								if (thisOne === 'free' || thisOne === 'signed' || thisOne === 'loan') {
+									return d.toLowerCase() == thisOne ? true : false;
+								} else {
+									return false;
+								}
+							}
+
 						}
 					}
 
@@ -458,8 +513,8 @@ angular.module('footballVisApp')
 							g.append("circle")
 								.attr("cx", (i * (width / legendItems[scope.filter.view].length)) + 40)
 								.attr("cy", -30)
-								.attr("r", function(d){
-									return (scope.chartdata[d]/data.length) * (15-3) + 3
+								.attr("r", function(d) {
+									return (scope.chartdata[d] / data.length) * (15 - 3) + 3
 								})
 								.attr("class", function(d) {
 									var str = d.split(' ')
@@ -474,10 +529,10 @@ angular.module('footballVisApp')
 										border: '0px'
 									})
 									.text(function(d, i) {
-										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100* scope.chartdata[d]/data.length) + "%)</small>"
+										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100 * scope.chartdata[d] / data.length) + "%)</small>"
 										return text
 									})
-								)
+							)
 							g.append("text")
 								.attr("x", (i * (width / legendItems[scope.filter.view].length)) + 60)
 								.attr("y", -25)
@@ -497,10 +552,24 @@ angular.module('footballVisApp')
 										border: '0px'
 									})
 									.text(function(d, i) {
-										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100* scope.chartdata[d]/data.length) + "%)</small>"
+										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100 * scope.chartdata[d] / data.length) + "%)</small>"
 										return text
 									})
-								)
+							)
+								.on("mouseover", function(d) {
+									d3.selectAll("circle").filter(function(e) {
+										if (e.fee) {
+											return setViewValue(e, d);
+										}
+									}).transition().duration(200).attr("r", 10)
+								})
+								.on("mouseout", function(d) {
+									d3.selectAll("circle").filter(function(e) {
+										if (e.fee) {
+											return setViewValue(e, d);
+										}
+									}).transition().duration(200).attr("r", 5)
+								})
 						});
 
 				}
