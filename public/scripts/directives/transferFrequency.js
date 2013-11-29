@@ -164,6 +164,16 @@ angular.module('footballVisApp')
 						return;
 					}
 
+					var currentResults = [];
+
+					var formatYear = d3.time.format('%Y');
+
+					_.each(scope.results, function(val){
+						if (val.startYear >= formatYear(minDate) && val.endYear <= formatYear(maxDate)){
+							currentResults.push(val)
+						}
+					})
+
 					//building legend items and categories
 					var legendItems = {
 						"fee": ['Free', 'Signed', 'Loan', "Disclosed Fee"],
@@ -281,6 +291,23 @@ angular.module('footballVisApp')
 						}
 					}
 
+					function createResults(thisClub){
+						var text = "<strong>Season</strong> - Rank<br>";
+						currentResults = _.sortBy(currentResults, function(val){
+							return val.endYear;
+						});
+						_.each(currentResults, function(val){
+							_.each(val.clubResults, function(club){
+								if (club.club.name === thisClub){
+									var thisText;
+									text += "<strong>" + val.startYear + " - " + val.endYear + "</strong>";
+									text += " - " + club.rank + "<br>";
+								}
+							});
+						});
+						return text;
+					}
+
 					function formatTooltip(d) {
 						if (!isNaN(d['fee'])) {
 							var fee = "£" + d3.format(",")(d['fee'])
@@ -333,7 +360,7 @@ angular.module('footballVisApp')
 							return y(d[transferVar].name);
 						})
 						.attr("class", function(d) {
-							return setClass(d);
+							return setClass(d) + " transfer"
 						})
 						.style("fill-opacity", 0.7)
 						.attr("r", function(d) {
@@ -438,6 +465,19 @@ angular.module('footballVisApp')
 								}
 							}).transition().duration(200).attr("r", 5)
 						})
+						.call(d3.helper.tooltip()
+							.style({
+								padding: '3px',
+								font: '12px',
+								background: '#fff',
+								opacity: '.85',
+								border: '0px',
+								width: '30px'
+							})
+							.text(function(d, i) {
+								return createResults(d);
+							})
+							)
 
 					svg.append("text")
 						.attr("x", -100)
@@ -502,11 +542,11 @@ angular.module('footballVisApp')
 									})
 							)
 								.on("mouseover", function(d) {
-									d3.selectAll('.' + $(this).attr("class"))
+									d3.selectAll('.' + $(this).attr("class") + ".transfer")
 										.transition().duration(200).attr("r", 10);
 								})
 								.on("mouseout", function(d) {
-									d3.selectAll('.' + $(this).attr("class"))										
+									d3.selectAll('.' + $(this).attr("class") + ".transfer")										
 										.transition().duration(200).attr("r", 5);
 								})
 						});
