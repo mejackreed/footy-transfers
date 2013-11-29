@@ -281,61 +281,6 @@ angular.module('footballVisApp')
 						}
 					}
 
-					function setViewValue(e, d) {
-						if (scope.filter.view === 'clubs') {
-							return e[transferVar].name.toLowerCase().replace(/\s/g, "-")
-						}
-						if (scope.filter.view === 'nation') {
-							var nation = e.player.nation.toLowerCase();
-							if (d === 'Other'){
-								if (!_.contains(legendItems[scope.filter.view], e.player.nation)){
-									return true;
-								}else{
-									return false;
-								}
-							}
-							else{
-								if (d.toLowerCase() === nation){
-									return true;
-								}
-							}
-						}
-						if (scope.filter.view === 'age') {
-							var age = moment(e.transferDate).diff(e.player.dateOfBirth, 'years')
-							if (d === 'Under 20' && age < 20){
-								return true;
-							}
-							if (d === '20 to 30' && age >= 20 && age < 30){
-								return true;
-							}
-							if (d === '30 to 40' && age >= 30 && age < 40){
-								return true;
-							}
-							if (d === 'Over 40' && age >= 40){
-								return true;
-							}
-						}
-						if (scope.filter.view === 'position') {
-							var thisOne = e.player.position.toLowerCase();
-							return d.toLowerCase() == thisOne ? true : false;
-						}
-						if (scope.filter.view === 'fee') {
-							var thisOne = e['fee'].toLowerCase()
-							if (d === 'Disclosed Fee') {
-								if (thisOne !== 'free' && thisOne !== 'signed' && thisOne !== 'loan') {
-									return true;
-								}
-							} else {
-								if (thisOne === 'free' || thisOne === 'signed' || thisOne === 'loan') {
-									return d.toLowerCase() == thisOne ? true : false;
-								} else {
-									return false;
-								}
-							}
-
-						}
-					}
-
 					function formatTooltip(d) {
 						if (!isNaN(d['fee'])) {
 							var fee = "£" + d3.format(",")(d['fee'])
@@ -557,18 +502,12 @@ angular.module('footballVisApp')
 									})
 							)
 								.on("mouseover", function(d) {
-									d3.selectAll("circle").filter(function(e) {
-										if (e.fee) {
-											return setViewValue(e, d);
-										}
-									}).transition().duration(200).attr("r", 10)
+									d3.selectAll('.' + $(this).attr("class"))
+										.transition().duration(200).attr("r", 10);
 								})
 								.on("mouseout", function(d) {
-									d3.selectAll("circle").filter(function(e) {
-										if (e.fee) {
-											return setViewValue(e, d);
-										}
-									}).transition().duration(200).attr("r", 5)
+									d3.selectAll('.' + $(this).attr("class"))										
+										.transition().duration(200).attr("r", 5);
 								})
 						});
 

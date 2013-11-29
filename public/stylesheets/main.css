@@ -12,6 +12,10 @@ text:hover {
   cursor: pointer;
 }
 
+.grey-out {
+  fill: #eeeeee;
+}
+
 .nation-england{
   fill: #ff3738;
 }
