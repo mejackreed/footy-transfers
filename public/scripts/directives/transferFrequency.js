@@ -12,7 +12,8 @@ angular.module('footballVisApp')
 				dataloaded: '=',
 				chartdata: '=',
 				currenttransfer: '=',
-				results: '='
+				results: '=',
+				currentclub: '='
 			},
 			link: function postLink(scope, element, attrs) {
 
@@ -436,7 +437,7 @@ angular.module('footballVisApp')
 								padding: '3px',
 								font: '12px',
 								background: '#fff',
-								opacity: '.75',
+								opacity: '.85',
 								border: '0px'
 							})
 							.text(function(d, i) {
@@ -505,11 +506,14 @@ angular.module('footballVisApp')
 							.text(function(d, i) {
 								return createResults(d);
 							})
-						
-							// .append("div")
-							// 	.attr("id", "stuff")
-
-							)
+						)
+						.on("click", function(d) {
+							scope.$apply(function() {
+								scope.currentclub = d;
+								// console.log(scope.currenttransfer)
+							});
+							$('#club-modal').modal('show');
+						});
 
 					svg.append("text")
 						.attr("x", -100)
@@ -542,7 +546,7 @@ angular.module('footballVisApp')
 										padding: '3px',
 										font: '12px',
 										background: '#fff',
-										opacity: '.9',
+										opacity: '.85',
 										border: '0px'
 									})
 									.text(function(d, i) {
@@ -565,7 +569,7 @@ angular.module('footballVisApp')
 										padding: '3px',
 										font: '12px',
 										background: '#fff',
-										opacity: '.9',
+										opacity: '.85',
 										border: '0px'
 									})
 									.text(function(d, i) {

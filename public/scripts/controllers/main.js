@@ -9,6 +9,8 @@ angular.module('footballVisApp')
 
 		$scope.currentTransfer = {};
 
+		$scope.currentClub = {};
+
 		$scope.results = [];
 
 		$scope.rumors = [];
