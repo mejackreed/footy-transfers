@@ -35,9 +35,10 @@ angular.module('footballVisApp')
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 				//setup tooltip
-				var div = d3.select("body").append("div")
-					.attr("class", "tooltip")
-					.style("opacity", 0);
+				// var tooltipDiv = d3.select("body").append("div")
+				// 	.attr("id", "tooltip")
+				// 	.attr("class", "tooltip")
+				// 	.style("opacity", 0);
 
 				//watch for data being loaded and filters changing
 				scope.$watch('dataloaded', function(newVal, oldVal) {
@@ -139,6 +140,18 @@ angular.module('footballVisApp')
 							data.splice(data.length - 1, 1)
 						}
 					})
+
+					if (scope.filter.show !== 'all'){
+						data = _.filter(data, function(val){
+						if (scope.filter.show === 'interleague'){
+							return (_.where(scope.clubs, {"name" : val[transferVarOpp].name}).length === 1)
+						}
+						if (scope.filter.show === 'outerleague'){
+							return (_.where(scope.clubs, {"name" : val[transferVarOpp].name}).length === 0)
+						}
+					})
+					}
+					
 
 					//sorting the transfer data by club number of transfers
 					data.sort(function(a, b) {
@@ -373,17 +386,30 @@ angular.module('footballVisApp')
 									return e === d.transferToClub.name || e === d.transferFromClub.name;
 								})
 								.attr("fill", "#428bca")
-							d3.select(this)
-								.transition().duration(200)
-								.attr("r", 8);
+							// d3.select(this)
+							// 	.transition().duration(200)
+							// 	.attr("r", 8);
 							d3.selectAll("circle").filter(function(e) {
 								if (e.player) {
 									return e.player._id === d.player._id
 								}
 							}).transition().duration(200).attr("r", 10)
+							// d3.select(this)
+							if (_.where(scope.clubs, {"name": d[transferVarOpp].name} ).length > 0){
+								svg.append("line")
+									.attr("x1", this.cx.baseVal.value)
+									.attr("x2", this.cx.baseVal.value)
+									.attr("y1", y(d[transferVarOpp].name))
+									.attr("y2", this.cy.baseVal.value)
+									.style("stroke", "black")
+	 								.attr("stroke-width", 1)
 
+
+							}
+								
 						})
 						.on("mouseout", function(d) {
+							d3.selectAll("line").remove()
 							d3.select("g").selectAll("text")
 								.filter(function(e) {
 									return e === d.transferToClub.name || e === d.transferFromClub.name;
@@ -457,6 +483,8 @@ angular.module('footballVisApp')
 									return e[transferVarOpp].name === d
 								}
 							}).transition().duration(200).attr("r", 10)
+
+
 						})
 						.on("mouseout", function(d) {
 							d3.selectAll("circle").filter(function(e) {
@@ -477,6 +505,10 @@ angular.module('footballVisApp')
 							.text(function(d, i) {
 								return createResults(d);
 							})
+						
+							// .append("div")
+							// 	.attr("id", "stuff")
+
 							)
 
 					svg.append("text")

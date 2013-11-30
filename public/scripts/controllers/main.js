@@ -27,7 +27,8 @@ angular.module('footballVisApp')
 			},
 			type: "to",
 			view: 'fee',
-			league: 'English Premier'
+			league: 'English Premier',
+			show: 'all'
 		};
 
 		$scope.getHelp = function(){

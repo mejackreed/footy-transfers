@@ -59,7 +59,13 @@
 <hr>
 <div class="row">
 	<div class="col-md-2 well" style="height:400px; overflow: scroll;" data-intro="Select the clubs you are interested in" data-position="right">
-		Select <a ng-click="selectAllClubs()">All</a> | <a ng-click="unselectAllClubs()">None</a>
+		<label>Show transfers:</label>
+		<select class="form-control" ng-model="filter.show">
+			<option value="all">All</option>
+			<option value="interleague">Interleague Only</option>
+			<option value="outerleague">Out of League Only</option>
+		</select>
+		Select <a ng-click="selectAllClubs()">All</a> | <a ng-click="unselectAllClubs()">None</a> Clubs
 		<ul class='list-unstyled'>
 			<li class='' ng-repeat='club in clubs'>
 				<label>
@@ -71,6 +77,9 @@
 		</ul>
 	</div>
 	<div class='col-md-10' id="transfer-frequency" transfer-frequency clubs='clubs' transferdata='transferdata' filter='filter' dataLoaded='dataLoaded' chartData='chartData' currentTransfer='currentTransfer' results='results'></div>
+</div>
+<div class="row">
+	
 </div>
 <div class="row">
 	<div class="col-md-6">
