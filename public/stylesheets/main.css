@@ -116,6 +116,96 @@ text:hover {
 }
 
 
+
+
+.legend-nation-england{
+  fill: #ff3738;
+}
+
+.legend-nation-germany{
+  fill: #fe781e;
+}
+
+.legend-nation-italy{
+  fill: #41bb19;
+}
+
+.legend-nation-france{
+  fill: #1570a6;
+}
+
+.legend-nation-spain{
+  fill: #9b59bb;
+}
+
+.legend-nation-other{
+  fill: ##1ba1e2;
+}
+
+.legend-age-under{
+  fill: #41bb19;
+}
+
+.legend-age-20{
+  fill: #1570a6;
+}
+
+.legend-age-30{
+  fill: #ff3738;
+}
+
+.legend-age-over{
+  fill: #9b59bb;
+}
+
+.legend-age-unknown{
+  fill:#000;
+}
+
+/*.age-goalkeeper{ 
+  fill: #ff3738;
+}
+
+.age-unknown{
+  fill: #000000;
+}*/
+
+.legend-position-midfielder{
+  fill: #9b59bb;
+}
+
+.legend-position-defender{
+  fill: #fe781e;
+}
+
+.legend-position-goalkeeper{ 
+  fill: #ff3738;
+}
+
+.legend-position-forward{
+  fill: #41bb19;
+}
+
+
+.legend-fee-signed{
+  fill: #1570a6;
+}
+
+.legend-fee-loan{
+  fill: #fe781e;
+}
+
+.legend-fee-free{
+  fill: #41bb19;
+}
+
+.legend-fee-disclosed{
+  fill: #ff3738;
+}
+
+
+
+
 .tottenham-hotspur{
   fill: #0A1F48;
 }
@@ -190,4 +280,9 @@ text:hover {
 }
 .wolverhampton-wanderers{
   fill:#CA5811;
+}
+
+
+.disappear {
+  display: none;
 }
