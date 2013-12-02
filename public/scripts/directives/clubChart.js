@@ -37,17 +37,14 @@ angular.module('footballVisApp')
 
 				scope.$watch('currentclub', function(newVal, oldVal) {
 					svg.selectAll('*').remove();
-					// console.log(newVal)
 					if (newVal.length > 0) {
 						init()
-
 					}
 
 				}, true);
 
 				//drawing the graph (data has already been checked that it has loaded)
 				function init() {
-					// console.log(scope.clubs)
 
 					var clubResults = [];
 
@@ -66,16 +63,6 @@ angular.module('footballVisApp')
 						});
 					});
 
-					// clubResults = _.sortBy(clubResults, function(val){
-					// 	return val.club.rank
-					// })
-
-					// console.log(clubResults)
-
-					// height = scope.clubs.length * 20 + 80
-
-					// d3.select("#transferChart")
-					// 	.style("height", height)
 					var transferVar = '',
 						transferVarOpp = '';
 					switch (scope.filter.type) {
@@ -103,11 +90,6 @@ angular.module('footballVisApp')
 						.key(function(d) { return new Date(d.transferDate).getFullYear(); }).sortKeys(d3.ascending)
 						.entries(transferData)
 
-					// transferCounts = transferCounts.sort(function(val){
-					// 	return parseInt(val.key)
-					// })
-					console.log(transferCounts)
-
 					var clubCounts = {};
 					var minDate = new Date(clubResults[0].startYear).setUTCFullYear(clubResults[0].startYear), //getDate(data[0]),
 						maxDate = new Date(clubResults[clubResults.length - 1].endYear).setUTCFullYear(clubResults[clubResults.length - 1].endYear) //getDate(data[data.length - 1]);
@@ -133,12 +115,6 @@ angular.module('footballVisApp')
 							return d.values.length
 						}),0])
 						.range([0, height - 80]);
-
-						console.log(y2.domain())
-
-						console.log(transferCounts.map(function(d){
-							return d.values.length;
-						}))
 
 					//setting up axes
 					var xAxis = d3.svg.axis()

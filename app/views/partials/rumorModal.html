@@ -16,15 +16,31 @@
         <li>
           Postion: [[currentTransfer.player.position]]
         </li>
+      </ul>
+      <h4>Transfers</h4>
+      <div id="transfer-text">
+        <br>
+        <br>
+        <br>
       </div>
-      <div rumor-view currentTransfer='currentTransfer' rumors='rumors'></div>
-      <div class="container">
+      <h4>Transfer Rumors</h4>
+        <div id="rumor-text" class="">
+          <br>
+          <br>
+          <br>
+       </div>
+        <div class="col-md-10" rumor-chart currentTransfer='currentTransfer' transferdata='transferdata' rumors='rumors'></div>
+      </div>
+      
+     <!--  <div class='col-md-10' id="rumor-results" rumor-chart clubs='clubs' transferdata='transferdata' filter='filter' dataLoaded='dataLoaded' chartData='chartData' currentTransfer='currentTransfer' results='results' currentClub='currentClub'>
+        </div> -->
+      <!-- <div class="container">
         <h4>Reported rumors: [[rumors.length]]</h4>
         <div ng-repeat='rumor in rumors'>
           Date: [[rumor.date| date:'shortDate']]<br>
           [[rumor.movingFrom]] &#8594; [[rumor.movingTo]]
         </div>
-      </div>
+      </div> -->
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button> -->

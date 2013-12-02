@@ -21,6 +21,7 @@ exports.setup = function(app) {
 	app.get('/api/players/nation/:nation', api.players);
 	app.get('/api/transfers/to/:league', api.transfers('to'));
 	app.get('/api/transfers/from/:league', api.transfers('from'));
+	app.get('/api/transfers/player/:id', api.transfers('player'));
 	app.get('/api/transfers', api.transfers);
 	app.get('/api/rumors/:player', api.rumors);
 	app.get('/api/results/:league', api.results);
@@ -105,6 +106,14 @@ ApiController.prototype.transfers = function(type) {
 						});
 				});
 				break;
+			case 'player':
+				Transfer.find({
+					player: req.params.id
+				}).populate('player transferToClub transferFromClub')
+					.exec(function(err, doc) {
+						res.json(doc);
+					});
+				break;
 		}
 	};
 };
@@ -141,9 +150,9 @@ ApiController.prototype.results = function(req, res) {
 				$lte: req.params.end
 			}
 		}).populate('clubResults').exec(function(err, doc) {
-			Club.populate(doc,{
+			Club.populate(doc, {
 				path: 'clubResults.club'
-			}, function(err, docs){
+			}, function(err, docs) {
 				res.json(docs);
 			});
 		});
@@ -151,9 +160,9 @@ ApiController.prototype.results = function(req, res) {
 		Season.find({
 			leagueName: req.params.league
 		}).populate('clubResults').exec(function(err, doc) {
-			Club.populate(doc,{
+			Club.populate(doc, {
 				path: 'clubResults.club'
-			}, function(err, docs){
+			}, function(err, docs) {
 				res.json(docs);
 			});
 		});

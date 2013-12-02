@@ -23,6 +23,9 @@ var RumorSchema = new Schema({
   },
   detail: {
     type: String
+  },
+  sentiment: {
+    type: Number
   }
 });
 
