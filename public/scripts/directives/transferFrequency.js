@@ -579,8 +579,8 @@ angular.module('footballVisApp')
 									})
 								)
 								.on("click", function() {
-									console.log(scope.filter.view);
-									console.log(d);
+									// console.log(scope.filter.view);
+									// console.log(d);
 									var dString = d.toLowerCase();
 									// if (scope.filter.view == 'nation') {
 									// 	// if d.startsWith
@@ -603,7 +603,8 @@ angular.module('footballVisApp')
 											dString = 'disclosed';
 									}
 
-									var typeInView = dString.toLowerCase();									
+									var typeInView = dString.toLowerCase();
+									console.log(typeInView);						
 									var targetType = scope.filter.view + "-" + typeInView;
 									console.log(targetType);
 									svg.selectAll('circle.' + targetType)
