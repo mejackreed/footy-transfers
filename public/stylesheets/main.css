@@ -8,6 +8,10 @@ body {
   border-top: 0px;
 }
 
+#rumor-text{
+  height:120px;
+}
+
 .line {
   fill: none;
   stroke: steelblue;

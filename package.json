@@ -2,15 +2,16 @@
   "name": "football-transfers",
   "version": "0.0.0",
   "engines": {
-      "node": "0.10.21"
-    },
+    "node": "0.10.21"
+  },
   "dependencies": {
     "express": "3.4.0",
     "swig": "*",
     "lodash": "~2.0.0",
     "async": "~0.2.9",
     "mongoose": "~3.8.0",
-    "moment": "~2.4.0"
+    "moment": "~2.4.0",
+    "Sentimental": "0.0.4"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

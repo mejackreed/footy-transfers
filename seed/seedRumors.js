@@ -4,6 +4,7 @@ var _ = require('../node_modules/lodash'),
   async = require('../node_modules/async');
 
 var rumors = require('./rumorFile');
+var analyze = require('Sentimental').analyze;
 
 
 
@@ -15,6 +16,8 @@ async.series({
     },
     two: function(callback) {
       _.each(rumors, function(val, i) {
+        var sent = analyze(val.Detail)
+        // console.log(sent)
         var test = new Rumor({
           playerName: val.Player,
           date: val.Date,
@@ -22,7 +25,8 @@ async.series({
           movingTo: val['Moving to'],
           fee: val.Fee,
           source: val.Source,
-          detail: val.Detail
+          detail: val.Detail,
+          sentiment: sent.score
         }).save(function(err) {
           callback(null, 2);
         })

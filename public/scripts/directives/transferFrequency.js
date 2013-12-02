@@ -402,6 +402,7 @@ angular.module('footballVisApp')
 									.attr("x2", this.cx.baseVal.value)
 									.attr("y1", y(d[transferVarOpp].name))
 									.attr("y2", this.cy.baseVal.value)
+									.attr("class", "transfer-line")
 									.style("stroke", "black")
 	 								.attr("stroke-width", 1)
 
@@ -410,7 +411,7 @@ angular.module('footballVisApp')
 								
 						})
 						.on("mouseout", function(d) {
-							d3.selectAll("line").remove()
+							d3.selectAll(".transfer-line").remove()
 							d3.select("g").selectAll("text")
 								.filter(function(e) {
 									return e === d.transferToClub.name || e === d.transferFromClub.name;
