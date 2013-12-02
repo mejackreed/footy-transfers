@@ -607,8 +607,6 @@ angular.module('footballVisApp')
 									console.log(typeInView);
 									var targetType = scope.filter.view + "-" + typeInView;
 									console.log(targetType);
-									// $(targetType).toggleClass("disappear"); 
-									// console.log(svg.selectAll('circle').classed());
 									svg.selectAll('circle.' + targetType)
 										.classed("disappear", function(cd, ind) {
 											if (this.classList.contains("disappear"))
@@ -617,10 +615,6 @@ angular.module('footballVisApp')
 												return true;
 											// console.log(this['class']);
 										});
-										// .attr("class", function(cd) {
-										// 	// console.log(cd);
-										// 	return "disappear " + targetType;
-										// })
 								})
 								
 								.on("mouseover", function(d) {
