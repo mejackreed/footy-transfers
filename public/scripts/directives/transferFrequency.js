@@ -1,4 +1,4 @@
-'use strict';
+	'use strict';
 
 angular.module('footballVisApp')
 	.directive('transferFrequency', function() {
@@ -463,7 +463,7 @@ angular.module('footballVisApp')
 								})
 								.attr("class", function(d) {
 									var str = d.split(' ')
-									return scope.filter.view + '-' + str[0].toLowerCase()
+									return 'legend-' + scope.filter.view + '-' + str[0].toLowerCase() // so they could be treated differently from circles on the graph
 								})
 								.call(d3.helper.tooltip()
 									.style({
@@ -501,6 +501,50 @@ angular.module('footballVisApp')
 										return text
 									})
 								)
+								.on("click", function() {
+									console.log(scope.filter.view);
+									console.log(d);
+									var dString = d.toLowerCase();
+									// if (scope.filter.view == 'nation') {
+									// 	// if d.startsWith
+									// }
+									if (scope.filter.view == 'age') {
+										if (dString[0] == 'u')
+											dString = 'under'
+										else if (dString[0] == '2')
+											dString = '20'
+										else if (dString[0] == '3')
+											dString = '30'
+										else if (dString[0] == '4')
+											dString = '40'
+									}
+									// else if (scope.filter.view == 'position') {
+
+									// } 
+									else if (scope.filter.view == 'fee') {
+										if (dString[0] == 'd')
+											dString = 'disclosed';
+									}
+
+									var typeInView = dString.toLowerCase();
+									console.log(typeInView);
+									var targetType = scope.filter.view + "-" + typeInView;
+									console.log(targetType);
+									// $(targetType).toggleClass("disappear"); 
+									// console.log(svg.selectAll('circle').classed());
+									svg.selectAll('circle.' + targetType)
+										.classed("disappear", function(cd, ind) {
+											if (this.classList.contains("disappear"))
+												return false;
+											else
+												return true;
+											// console.log(this['class']);
+										});
+										// .attr("class", function(cd) {
+										// 	// console.log(cd);
+										// 	return "disappear " + targetType;
+										// })
+								})
 						});
 
 				}
