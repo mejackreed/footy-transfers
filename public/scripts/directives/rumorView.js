@@ -233,7 +233,12 @@ angular.module('footballVisApp')
 								var text = ""
 								text += formatDate(new Date(d.transferDate)) + "<br>"
 								text += d.transferFromClub.name + " -> " + d.transferToClub.name + "<br>";
-								text += d.fee
+								// console.log(d.fee);
+								if (d.fee == "")
+									text += d.fee + "<br>";
+								else
+									text += d.fee
+								
 								return text;
 							})
 						})
