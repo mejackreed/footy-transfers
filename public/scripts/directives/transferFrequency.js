@@ -603,8 +603,7 @@ angular.module('footballVisApp')
 											dString = 'disclosed';
 									}
 
-									var typeInView = dString.toLowerCase();
-									console.log(typeInView);
+									var typeInView = dString.toLowerCase();									
 									var targetType = scope.filter.view + "-" + typeInView;
 									console.log(targetType);
 									svg.selectAll('circle.' + targetType)
@@ -613,7 +612,6 @@ angular.module('footballVisApp')
 												return false;
 											else
 												return true;
-											// console.log(this['class']);
 										});
 								})
 								
