@@ -1,4 +1,4 @@
-	'use strict';
+'use strict';
 
 angular.module('footballVisApp')
 	.directive('transferFrequency', function() {
