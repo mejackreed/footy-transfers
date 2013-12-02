@@ -26,7 +26,7 @@ d3.helper.tooltip = function() {
             });
             // Add text using the accessor function, Crop text arbitrarily
             tooltipDiv.style('width', function(d, i) {
-                return (text(pD, pI).length > 80) ? '300px' : null;
+                return (text(pD, pI).length > 80) ? '150px' : null;
             })
                 .html(function(d, i) {
                     return text(pD, pI);

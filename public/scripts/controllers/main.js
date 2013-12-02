@@ -9,6 +9,8 @@ angular.module('footballVisApp')
 
 		$scope.currentTransfer = {};
 
+		$scope.currentClub = {};
+
 		$scope.results = [];
 
 		$scope.rumors = [];
@@ -27,7 +29,8 @@ angular.module('footballVisApp')
 			},
 			type: "to",
 			view: 'fee',
-			league: 'English Premier'
+			league: 'English Premier',
+			show: 'all'
 		};
 
 		$scope.getHelp = function(){

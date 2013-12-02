@@ -4,12 +4,26 @@ body {
     color: #333;
 }
 
+.modal-footer{
+  border-top: 0px;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
 circle:hover {
     cursor: pointer;
 }
 
 text:hover {
   cursor: pointer;
+}
+
+.grey-out {
+  fill: #eeeeee;
 }
 
 .nation-england{

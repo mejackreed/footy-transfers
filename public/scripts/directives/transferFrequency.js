@@ -12,7 +12,8 @@ angular.module('footballVisApp')
 				dataloaded: '=',
 				chartdata: '=',
 				currenttransfer: '=',
-				results: '='
+				results: '=',
+				currentclub: '='
 			},
 			link: function postLink(scope, element, attrs) {
 
@@ -35,9 +36,10 @@ angular.module('footballVisApp')
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 				//setup tooltip
-				var div = d3.select("body").append("div")
-					.attr("class", "tooltip")
-					.style("opacity", 0);
+				// var tooltipDiv = d3.select("body").append("div")
+				// 	.attr("id", "tooltip")
+				// 	.attr("class", "tooltip")
+				// 	.style("opacity", 0);
 
 				//watch for data being loaded and filters changing
 				scope.$watch('dataloaded', function(newVal, oldVal) {
@@ -140,6 +142,18 @@ angular.module('footballVisApp')
 						}
 					})
 
+					if (scope.filter.show !== 'all'){
+						data = _.filter(data, function(val){
+						if (scope.filter.show === 'interleague'){
+							return (_.where(scope.clubs, {"name" : val[transferVarOpp].name}).length === 1)
+						}
+						if (scope.filter.show === 'outerleague'){
+							return (_.where(scope.clubs, {"name" : val[transferVarOpp].name}).length === 0)
+						}
+					})
+					}
+					
+
 					//sorting the transfer data by club number of transfers
 					data.sort(function(a, b) {
 						if (clubCounts[a[transferVar].name] < clubCounts[b[transferVar].name])
@@ -164,6 +178,16 @@ angular.module('footballVisApp')
 						return;
 					}
 
+					var currentResults = [];
+
+					var formatYear = d3.time.format('%Y');
+
+					_.each(scope.results, function(val){
+						if (val.startYear >= formatYear(minDate) && val.endYear <= formatYear(maxDate)){
+							currentResults.push(val)
+						}
+					})
+
 					//building legend items and categories
 					var legendItems = {
 						"fee": ['Free', 'Signed', 'Loan', "Disclosed Fee"],
@@ -173,7 +197,7 @@ angular.module('footballVisApp')
 					}
 
 					scope.chartdata = {};
-				
+
 
 					_.each(legendItems[scope.filter.view], function(val) {
 						scope.chartdata[val] = 0;
@@ -281,6 +305,23 @@ angular.module('footballVisApp')
 						}
 					}
 
+					function createResults(thisClub){
+						var text = "<strong>Season</strong> - Rank<br>";
+						currentResults = _.sortBy(currentResults, function(val){
+							return val.endYear;
+						});
+						_.each(currentResults, function(val){
+							_.each(val.clubResults, function(club){
+								if (club.club.name === thisClub){
+									var thisText;
+									text += "<strong>" + val.startYear + " - " + val.endYear + "</strong>";
+									text += " - " + club.rank + "<br>";
+								}
+							});
+						});
+						return text;
+					}
+
 					function formatTooltip(d) {
 						if (!isNaN(d['fee'])) {
 							var fee = "£" + d3.format(",")(d['fee'])
@@ -333,7 +374,7 @@ angular.module('footballVisApp')
 							return y(d[transferVar].name);
 						})
 						.attr("class", function(d) {
-							return setClass(d);
+							return setClass(d) + " transfer"
 						})
 						.style("fill-opacity", 0.7)
 						.attr("r", function(d) {
@@ -346,17 +387,30 @@ angular.module('footballVisApp')
 									return e === d.transferToClub.name || e === d.transferFromClub.name;
 								})
 								.attr("fill", "#428bca")
-							d3.select(this)
-								.transition().duration(200)
-								.attr("r", 8);
+							// d3.select(this)
+							// 	.transition().duration(200)
+							// 	.attr("r", 8);
 							d3.selectAll("circle").filter(function(e) {
 								if (e.player) {
 									return e.player._id === d.player._id
 								}
 							}).transition().duration(200).attr("r", 10)
+							// d3.select(this)
+							if (_.where(scope.clubs, {"name": d[transferVarOpp].name} ).length > 0){
+								svg.append("line")
+									.attr("x1", this.cx.baseVal.value)
+									.attr("x2", this.cx.baseVal.value)
+									.attr("y1", y(d[transferVarOpp].name))
+									.attr("y2", this.cy.baseVal.value)
+									.style("stroke", "black")
+	 								.attr("stroke-width", 1)
 
+
+							}
+								
 						})
 						.on("mouseout", function(d) {
+							d3.selectAll("line").remove()
 							d3.select("g").selectAll("text")
 								.filter(function(e) {
 									return e === d.transferToClub.name || e === d.transferFromClub.name;
@@ -383,7 +437,7 @@ angular.module('footballVisApp')
 								padding: '3px',
 								font: '12px',
 								background: '#fff',
-								opacity: '.75',
+								opacity: '.85',
 								border: '0px'
 							})
 							.text(function(d, i) {
@@ -430,6 +484,8 @@ angular.module('footballVisApp')
 									return e[transferVarOpp].name === d
 								}
 							}).transition().duration(200).attr("r", 10)
+
+
 						})
 						.on("mouseout", function(d) {
 							d3.selectAll("circle").filter(function(e) {
@@ -438,6 +494,26 @@ angular.module('footballVisApp')
 								}
 							}).transition().duration(200).attr("r", 5)
 						})
+						.call(d3.helper.tooltip()
+							.style({
+								padding: '3px',
+								font: '12px',
+								background: '#fff',
+								opacity: '.85',
+								border: '0px',
+								width: '30px'
+							})
+							.text(function(d, i) {
+								return createResults(d);
+							})
+						)
+						.on("click", function(d) {
+							scope.$apply(function() {
+								scope.currentclub = d;
+								// console.log(scope.currenttransfer)
+							});
+							$('#club-modal').modal('show');
+						});
 
 					svg.append("text")
 						.attr("x", -100)
@@ -458,8 +534,8 @@ angular.module('footballVisApp')
 							g.append("circle")
 								.attr("cx", (i * (width / legendItems[scope.filter.view].length)) + 40)
 								.attr("cy", -30)
-								.attr("r", function(d){
-									return (scope.chartdata[d]/data.length) * (15-3) + 3
+								.attr("r", function(d) {
+									return (scope.chartdata[d] / data.length) * (15 - 3) + 3
 								})
 								.attr("class", function(d) {
 									var str = d.split(' ')
@@ -470,14 +546,14 @@ angular.module('footballVisApp')
 										padding: '3px',
 										font: '12px',
 										background: '#fff',
-										opacity: '.9',
+										opacity: '.85',
 										border: '0px'
 									})
 									.text(function(d, i) {
-										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100* scope.chartdata[d]/data.length) + "%)</small>"
+										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100 * scope.chartdata[d] / data.length) + "%)</small>"
 										return text
 									})
-								)
+							)
 							g.append("text")
 								.attr("x", (i * (width / legendItems[scope.filter.view].length)) + 60)
 								.attr("y", -25)
@@ -493,57 +569,24 @@ angular.module('footballVisApp')
 										padding: '3px',
 										font: '12px',
 										background: '#fff',
-										opacity: '.9',
+										opacity: '.85',
 										border: '0px'
 									})
 									.text(function(d, i) {
-										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100* scope.chartdata[d]/data.length) + "%)</small>"
+										var text = "<small><strong>" + d + ":</strong> " + scope.chartdata[d] + " transfers (" + Math.round(100 * scope.chartdata[d] / data.length) + "%)</small>"
 										return text
 									})
+<<<<<<< HEAD
 								)
-								.on("click", function() {
-									console.log(scope.filter.view);
-									console.log(d);
-									var dString = d.toLowerCase();
-									// if (scope.filter.view == 'nation') {
-									// 	// if d.startsWith
-									// }
-									if (scope.filter.view == 'age') {
-										if (dString[0] == 'u')
-											dString = 'under'
-										else if (dString[0] == '2')
-											dString = '20'
-										else if (dString[0] == '3')
-											dString = '30'
-										else if (dString[0] == '4')
-											dString = '40'
-									}
-									// else if (scope.filter.view == 'position') {
-
-									// } 
-									else if (scope.filter.view == 'fee') {
-										if (dString[0] == 'd')
-											dString = 'disclosed';
-									}
-
-									var typeInView = dString.toLowerCase();
-									console.log(typeInView);
-									var targetType = scope.filter.view + "-" + typeInView;
-									console.log(targetType);
-									// $(targetType).toggleClass("disappear"); 
-									// console.log(svg.selectAll('circle').classed());
-									svg.selectAll('circle.' + targetType)
-										.classed("disappear", function(cd, ind) {
-											if (this.classList.contains("disappear"))
-												return false;
-											else
-												return true;
-											// console.log(this['class']);
-										});
-										// .attr("class", function(cd) {
-										// 	// console.log(cd);
-										// 	return "disappear " + targetType;
-										// })
+								
+								.on("mouseover", function(d) {
+									d3.selectAll('.' + $(this).attr("class") + ".transfer")
+										.transition().duration(200).attr("r", 10);
+								})
+								.on("mouseout", function(d) {
+									d3.selectAll('.' + $(this).attr("class") + ".transfer")										
+										.transition().duration(200).attr("r", 5);
+>>>>>>> upstream/master
 								})
 						});
 
