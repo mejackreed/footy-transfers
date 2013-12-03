@@ -224,9 +224,7 @@ angular.module('footballVisApp')
 				    .attr("y2", function (d) {
 				    	return 310;
 						})
-						.style("stroke", "#1570a6")
-						.style("stroke-width", 5)
-						.style("stroke-dasharray", ("5, 5"))
+						
 						.on("mouseover", function(d){
 							d3.select("#transfer-text")
 							.html(function(e){
@@ -246,7 +244,9 @@ angular.module('footballVisApp')
 							d3.select("#transfer-text")
 								.html("<br><br><br>");
 						})
-
+						.style("stroke", "#1570a6")
+						.style("stroke-width", 5)
+						// .style("stroke-dasharray", ("5, 5"))
 
 					svg.append("text")
 						.attr("x", 20)

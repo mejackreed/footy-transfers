@@ -58,8 +58,12 @@ text:hover {
   fill: #41bb19;
 }
 
-.age-20{
+.age-18{
   fill: #1570a6;
+}
+
+.age-24{
+  fill: #fe781e;
 }
 
 .age-30{
@@ -146,8 +150,12 @@ text:hover {
   fill: #41bb19;
 }
 
-.legend-age-20{
+.legend-age-18{
   fill: #1570a6;
+}
+
+.legend-age-24{
+  fill: #fe781e;
 }
 
 .legend-age-30{
