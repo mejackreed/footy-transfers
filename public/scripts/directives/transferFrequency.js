@@ -192,7 +192,7 @@ angular.module('footballVisApp')
 					var legendItems = {
 						"fee": ['Free', 'Signed', 'Loan', "Disclosed Fee"],
 						"position": ['Forward', 'Midfielder', 'Defender', 'Goalkeeper'],
-						"age": ['Under 20', '20 to 30', '30 to 40', 'Over 40'],
+						"age": ['Under 18', '18 to 23', '24 to 29', '30 to 36', 'Over 37'],
 						"nation": ["Italy", "England", "France", "Germany", "Spain", "Other"]
 					}
 
@@ -236,23 +236,28 @@ angular.module('footballVisApp')
 									break;
 							}
 						}
+						// "age": ['Under 18', '18 to 23', '24 to 29', '30 to 36', 'Over 37']
 						if (scope.filter.view === 'age') {
 							var age = moment(d.transferDate).diff(d.player.dateOfBirth, 'years')
 							switch (true) {
-								case (age < 20):
-									scope.chartdata['Under 20'] += 1;
+								case (age < 18):
+									scope.chartdata['Under 18'] += 1;
 									return 'age-under';
 									break;
-								case (age >= 20 && age < 30):
-									scope.chartdata['20 to 30'] += 1;
-									return 'age-20';
+								case (age < 24 && age >= 18):
+									scope.chartdata['18 to 23'] += 1;
+									return 'age-18';
 									break;
-								case (age >= 30 && age < 40):
-									scope.chartdata['30 to 40'] += 1;
+								case (age >= 24 && age < 30):
+									scope.chartdata['24 to 29'] += 1;
+									return 'age-24';
+									break;
+								case (age >= 30 && age < 37):
+									scope.chartdata['30 to 36'] += 1;
 									return 'age-30'
 									break;
-								case (age >= 40):
-									scope.chartdata['Over 40'] += 1;
+								case (age >= 37):
+									scope.chartdata['Over 37'] += 1;
 									return 'age-over'
 									break;
 								default:
@@ -585,23 +590,28 @@ angular.module('footballVisApp')
 									// if (scope.filter.view == 'nation') {
 									// 	// if d.startsWith
 									// }
-									if (scope.filter.view == 'age') {
-										if (dString[0] == 'u')
-											dString = 'under'
-										else if (dString[0] == '2')
-											dString = '20'
-										else if (dString[0] == '3')
-											dString = '30'
-										else if (dString[0] == '4')
-											dString = '40'
-									}
-									// else if (scope.filter.view == 'position') {
+									console.log(dString);
+									dString = dString.split(' ')[0];
+									// if (scope.filter.view == 'age') {
+									// 	dString = dString.split(' ')[0];
+									// 	// if (dString[0] == 'u')
+									// 	// 	dString = 'under'
+									// 	// else if (dString.slice(0, 2) == '20')
+									// 	// 	dString = '20'
+									// 	// else if (dString.slice(0, 2) == '25')
+									// 	// 	dString = '25'
+									// 	// else if (dString[0] == '3')
+									// 	// 	dString = '30'
+									// 	// else if (dString[0] == 'o')
+									// 	// 	dString = 'over'
+									// }
+									// // else if (scope.filter.view == 'position') {
 
-									// } 
-									else if (scope.filter.view == 'fee') {
-										if (dString[0] == 'd')
-											dString = 'disclosed';
-									}
+									// // } 
+									// else if (scope.filter.view == 'fee') {
+									// 	if (dString[0] == 'd')
+									// 		dString = 'disclosed';
+									// }
 
 									var typeInView = dString.toLowerCase();
 									console.log(typeInView);						
