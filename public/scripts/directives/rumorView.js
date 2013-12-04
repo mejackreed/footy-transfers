@@ -226,7 +226,6 @@ angular.module('footballVisApp')
 						})
 						.style("stroke", "#1570a6")
 						.style("stroke-width", 5)
-						.style("stroke-dasharray", ("5, 5"))
 						.on("mouseover", function(d){
 							d3.select("#transfer-text")
 							.html(function(e){
