@@ -134,7 +134,7 @@ angular.module('footballVisApp')
 								str += val.transferToClub.name
 								str += val.transferFromClub.name
 								str += val.fee
-								return (str.indexOf(scope.filter.searchValue) !== -1)
+								return (str.toLowerCase().indexOf(scope.filter.searchValue.toLowerCase()) !== -1)
 							})
 						}
 						if (!data[data.length - 1]) {
