@@ -381,6 +381,9 @@ angular.module('footballVisApp')
 						.attr("class", function(d) {
 							return setClass(d) + " transfer"
 						})
+						.attr("id", function(d){
+							return '_' + d._id
+						})
 						.style("fill-opacity", 0.7)
 						.attr("r", function(d) {
 							var size = 5;
@@ -449,12 +452,25 @@ angular.module('footballVisApp')
 							.text(function(d, i) {
 								var text = "<small>" + moment(d['transferDate']).format('MM/DD/YYYY');
 								nestedTransfers.forEach(function(val, i) {
-									if (val['key'] == d[transferVar].name) {
+									if (val['key'] == d[transferVar].name ) {
+										// console.log(d[transferVar])
 										val.values.forEach(function(val2, j) {
+											// console.log(val2);
 											if (val2['key'] == d['transferDate']) {
+
 												val2.values.forEach(function(val3, k) {
-													text += formatTooltip(val3)
-												})
+													var curEleId = val3['_id']
+													var curSelectedEleById = svg.select("#_" + val3._id)
+
+													// don't show tooltip for transfer types that are not shown
+													curSelectedEleById.each(function(cd, ci) {
+														// console.log(this.classList.contains('disappear'))
+														if (!this.classList.contains('disappear')) {
+															// console.log(formatTooltip(val3))
+															text += formatTooltip(val3)
+														}
+													})
+												});
 											}
 										})
 									}
@@ -614,9 +630,9 @@ angular.module('footballVisApp')
 									// }
 
 									var typeInView = dString.toLowerCase();
-									console.log(typeInView);						
+									// console.log(typeInView);						
 									var targetType = scope.filter.view + "-" + typeInView;
-									console.log(targetType);
+									// console.log(targetType);
 									svg.selectAll('circle.' + targetType)
 										.classed("disappear", function(cd, ind) {
 											if (this.classList.contains("disappear"))
